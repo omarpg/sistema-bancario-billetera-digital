@@ -6,7 +6,7 @@ Aplicación web full-stack de billetera digital que simula funcionalidades banca
 
 ---
 
-## 📸 Screenshots
+## 📸 Screenshots (por hacer)
 
 ### Portal Público
 ![Home Page](docs/screenshots/portal-home.png)
@@ -454,34 +454,9 @@ vercel
 - ✅ **SQL Injection prevention** - JPA con prepared statements
 - ✅ **XSS protection** - Sanitización de inputs en React
 
-### Recomendaciones para Producción
-
-- [ ] Usar HTTPS en todos los endpoints
-- [ ] Implementar rate limiting
-- [ ] Configurar helmet.js para headers de seguridad
-- [ ] Implementar logs de auditoría completos
-- [ ] Usar variables de entorno seguras (no hardcodear secretos)
-- [ ] Implementar refresh tokens
-- [ ] Agregar CAPTCHA en login
-
 ---
 
-## 📈 Funcionalidades Futuras
-
-### Próximas Mejoras Planeadas
-
-- [ ] Pago de servicios básicos
-- [ ] Gráficos de gastos mensuales
-- [ ] Exportación de movimientos a Excel/PDF
-- [ ] Notificaciones push en tiempo real
-- [ ] Modo oscuro
-- [ ] Aplicación móvil (React Native)
-- [ ] Integración con API de bancos reales (sandbox)
-- [ ] Biometría para autenticación
-
----
-
-## 🐛 Problemas Conocidos
+## 🐛 Limitaciones aceptadas
 
 - [ ] El sistema de OTP por email requiere configuración SMTP adicional
 - [ ] Los indicadores económicos dependen de disponibilidad de mindicador.cl
@@ -493,8 +468,7 @@ vercel
 
 Este es un proyecto de portafolio personal. Si encuentras bugs o tienes sugerencias:
 
-1. Abre un Issue describiendo el problema
-2. (Opcional) Crea un Pull Request con la solución
+1. Envíame un email om.ponce.g@gmail.com
 
 ---
 
@@ -505,8 +479,6 @@ Este proyecto está bajo la Licencia MIT. Ver archivo `LICENSE` para más detall
 ---
 
 ## 👨‍💻 Autor
-
-**Tu Nombre**
 
 - GitHub: [@tu-usuario](https://github.com/tu-usuario)
 - LinkedIn: [Tu Perfil](https://linkedin.com/in/tu-perfil)
@@ -526,4 +498,4 @@ Este proyecto está bajo la Licencia MIT. Ver archivo `LICENSE` para más detall
 
 ---
 
-**⭐ Si este proyecto te fue útil, considera darle una estrella en GitHub**
+**⭐ Proyecto con fines educativos**
