@@ -1,0 +1,200 @@
+---
+import IndicadorCard from "./IndicadorCard.astro";
+import { indicadoresInfo } from "../utils/data";
+import type { MindicadorResponse } from "../utils/types/indicadores";
+import AltHeroSection from "./AltHeroSection.astro";
+
+// Fetch data en build time (SSG con revalidación)
+let indicadores: MindicadorResponse | null = null;
+let error: string | null = null;
+let usingFallback = false;
+
+// Valores de fallback (últimos conocidos - actualizar manualmente cada cierto tiempo)
+const fallbackData = {
+  uf: { valor: 37500, fecha: "2026-02-15" },
+  dolar: { valor: 950, fecha: "2026-02-15" },
+  euro: { valor: 1020, fecha: "2026-02-15" },
+};
+
+try {
+  const response = await fetch("https://mindicador.cl/api");
+  if (response.ok) {
+    indicadores = await response.json();
+
+    // Debug: Ver qué datos llegaron
+    console.log("=== INDICADORES CARGADOS ===");
+    console.log(
+      "UF:",
+      indicadores?.uf?.valor,
+      "Fecha:",
+      indicadores?.uf?.fecha,
+    );
+    console.log(
+      "USD:",
+      indicadores?.dolar?.valor,
+      "Fecha:",
+      indicadores?.dolar?.fecha,
+    );
+    console.log(
+      "EUR:",
+      indicadores?.euro?.valor,
+      "Fecha:",
+      indicadores?.euro?.fecha,
+    );
+    console.log("===========================");
+  } else {
+    error = "No se pudo conectar con la API de indicadores";
+    console.warn(
+      "API de mindicador.cl no disponible, usando datos de respaldo",
+    );
+    usingFallback = true;
+    indicadores = {
+      version: "fallback",
+      autor: "local",
+      fecha: new Date().toISOString(),
+      uf: {
+        ...fallbackData.uf,
+        codigo: "uf",
+        nombre: "UF",
+        unidad_medida: "Pesos",
+      },
+      dolar: {
+        ...fallbackData.dolar,
+        codigo: "dolar",
+        nombre: "Dólar",
+        unidad_medida: "Pesos",
+      },
+      euro: {
+        ...fallbackData.euro,
+        codigo: "euro",
+        nombre: "Euro",
+        unidad_medida: "Pesos",
+      },
+    };
+  }
+} catch (e) {
+  error = "Error al cargar los indicadores económicos";
+  console.error("Error fetching indicadores:", e);
+  usingFallback = true;
+  indicadores = {
+    version: "fallback",
+    autor: "local",
+    fecha: new Date().toISOString(),
+    uf: {
+      ...fallbackData.uf,
+      codigo: "uf",
+      nombre: "UF",
+      unidad_medida: "Pesos",
+    },
+    dolar: {
+      ...fallbackData.dolar,
+      codigo: "dolar",
+      nombre: "Dólar",
+      unidad_medida: "Pesos",
+    },
+    euro: {
+      ...fallbackData.euro,
+      codigo: "euro",
+      nombre: "Euro",
+      unidad_medida: "Pesos",
+    },
+  };
+}
+---
+
+<main>
+  <!-- Alt Hero Section -->
+  <AltHeroSection
+    title="Indicadores Económicos"
+    description="Consulta los valores actualizados de UF, Dólar y Euro en tiempo real"
+  />
+  <!-- Indicadores Grid -->
+  <section class="section-container">
+    {/* Mensaje de advertencia si usa fallback */}
+    {
+      usingFallback && (
+        <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
+          <p class="text-yellow-800 text-sm">
+            ⚠️ No se pudo conectar con mindicador.cl. Se muestran valores de
+            referencia.
+          </p>
+        </div>
+      )
+    }
+    <>
+      <div class="grid md:grid-cols-3 gap-8 mb-12">
+        {
+          !indicadores // Loading skeleton
+            ? Array.from({ length: 3 }).map(() => (
+                <div class="bg-white rounded-xl shadow-sm p-6 animate-pulse">
+                  <div class="flex items-start justify-between mb-4">
+                    <div class="w-12 h-12 bg-gray-200 rounded-lg" />
+                    <div class="w-16 h-6 bg-gray-200 rounded" />
+                  </div>
+                  <div class="h-6 bg-gray-200 rounded w-3/4 mb-4" />
+                  <div class="h-10 bg-gray-200 rounded w-32 mb-2" />
+                  <div class="h-4 bg-gray-200 rounded w-24" />
+                </div>
+              ))
+            : indicadoresInfo.map((info) => {
+                let valor = 0;
+                let fecha = new Date().toISOString();
+
+                if (indicadores) {
+                  const indicadorKey = info.codigo as "uf" | "dolar" | "euro";
+                  const data = indicadores[indicadorKey];
+
+                  if (data && typeof data === "object" && "valor" in data) {
+                    valor = data.valor;
+                    fecha = data.fecha;
+                  }
+                }
+
+                return (
+                  <IndicadorCard
+                    nombre={info.nombre}
+                    valor={valor}
+                    fecha={fecha}
+                    icono={info.icono}
+                    loading={false}
+                  />
+                );
+              })
+        }
+      </div>
+
+      <!-- Información adicional -->
+      <div class="bg-blue-50 rounded-xl p-8">
+        <h2 class="text-2xl font-bold text-gray-900 mb-6">
+          Acerca de los indicadores
+        </h2>
+        <div class="grid md:grid-cols-3 gap-6">
+          {
+            indicadoresInfo.map((info) => (
+              <div>
+                <h3 class="font-semibold text-gray-900 mb-2">{info.nombre}</h3>
+                <p class="text-sm text-gray-600">{info.descripcion}</p>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+
+      <!-- Disclaimer -->
+      <div class="mt-8 text-center">
+        <p class="text-sm text-gray-700">
+          Datos proporcionados por <a
+            href="https://mindicador.cl"
+            target="_blank"
+            rel="noopener"
+            class="text-primary-700 hover:text-primary-800 underline font-medium"
+            >mindicador.cl</a
+          >
+          <br />
+          Los valores son referenciales y pueden variar según la fuente oficial del
+          Banco Central de Chile.
+        </p>
+      </div>
+    </>
+  </section>
+</main>

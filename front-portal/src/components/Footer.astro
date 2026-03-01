@@ -1,0 +1,119 @@
+---
+const currentYear = new Date().getFullYear();
+---
+
+<footer class="bg-gray-900 text-gray-300">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+      <!-- Columna 1: Logo y descripción -->
+      <div class="col-span-1">
+        <div class="flex items-center space-x-2 mb-4">
+          <svg
+            class="h-8 w-8 text-primary-400"
+            fill="currentColor"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+          >
+            <path
+              d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.31-8.86c-1.77-.45-2.34-.94-2.34-1.67 0-.84.79-1.43 2.1-1.43 1.38 0 1.9.66 1.94 1.64h1.71c-.05-1.34-.87-2.57-2.49-2.97V5H10.9v1.69c-1.51.32-2.72 1.3-2.72 2.81 0 1.79 1.49 2.69 3.66 3.21 1.95.46 2.34 1.15 2.34 1.87 0 .53-.39 1.39-2.1 1.39-1.6 0-2.23-.72-2.32-1.64H8.04c.1 1.7 1.36 2.66 2.86 2.97V19h2.34v-1.67c1.52-.29 2.72-1.16 2.73-2.77-.01-2.2-1.9-2.96-3.66-3.42z"
+            ></path>
+          </svg>
+          <span class="text-xl font-bold text-white">Billetera Digital</span>
+        </div>
+        <p class="text-sm text-gray-300">
+          Tu solución de banca digital confiable y segura para gestionar tus
+          finanzas.
+        </p>
+      </div>
+
+      <!-- Columna 2: Productos -->
+      <div>
+        <h3 class="text-white font-semibold mb-4">Productos</h3>
+        <ul class="space-y-2 text-sm">
+          <li>
+            <a
+              href="/productos#corriente"
+              class="text-gray-300 hover:text-white transition-colors"
+              >Cuenta Corriente</a>
+          </li>
+          <li>
+            <a
+              href="/productos#vista"
+              class="text-gray-300 hover:text-white transition-colors"
+              >Cuenta Vista</a>
+          </li>
+          <li>
+            <a
+              href="/productos#debito"
+              class="text-gray-300 hover:text-white transition-colors"
+              >Tarjeta Débito</a>
+          </li>
+          <li>
+            <a
+              href="/simulador"
+              class="text-gray-300 hover:text-white transition-colors"
+              >Simulador de Crédito</a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Columna 3: Ayuda -->
+      <div>
+        <h3 class="text-white font-semibold mb-4">Ayuda</h3>
+        <ul class="space-y-2 text-sm">
+          <li>
+            <a href="#" class="text-gray-300 hover:text-white transition-colors"
+              >Preguntas Frecuentes</a>
+          </li>
+          <li>
+            <a href="#" class="text-gray-300 hover:text-white transition-colors"
+              >Términos y Condiciones</a>
+          </li>
+          <li>
+            <a href="#" class="text-gray-300 hover:text-white transition-colors"
+              >Política de Privacidad</a>
+          </li>
+          <li>
+            <a href="#" class="text-gray-300 hover:text-white transition-colors"
+              >Contacto</a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Columna 4: Legal -->
+      <div>
+        <h3 class="text-white font-semibold mb-4">Legal</h3>
+        <p class="text-sm text-gray-300 mb-2">
+          Este es un proyecto de portafolio con fines educativos.
+        </p>
+        <p class="text-xs text-gray-400">
+          No es una institución financiera real.
+        </p>
+      </div>
+    </div>
+
+    <!-- Copyright -->
+    <div class="border-t border-gray-700 mt-8 pt-8 text-sm text-center">
+      <p class="text-gray-300">
+        &copy; {currentYear} Billetera Digital. Proyecto de portafolio.
+      </p>
+    </div>
+  </div>
+</footer>
+
+<!-- JSON-LD Schema -->
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FinancialService",
+    "name": "Billetera Digital",
+    "description": "Billetera digital para gestionar tus finanzas de forma segura",
+    "url": "https://billetera-digital-page.com",
+    "logo": "https://billetera-digital-page.com/logo.png",
+    "address": {
+      "@type": "PostalAddress",
+      "addressCountry": "CL"
+    },
+    "sameAs": ["https://github.com/tu-usuario"]
+  }
+</script>

@@ -1,0 +1,44 @@
+---
+import SimuladorCredito from "./SimuladorCredito";
+import AltHeroSection from "./AltHeroSection.astro";
+---
+
+<main>
+  <!-- Alt Hero Section -->
+  <AltHeroSection
+    title="Simulador de Crédito"
+    description="Calcula tu cuota mensual, CAE y costo total. Simula tu crédito según la normativa chilena."
+  />
+
+  <!-- Simulador -->
+  <section class="section-container">
+    <div class="max-w-4xl mx-auto">
+      <SimuladorCredito client:load />
+
+      <!-- Información adicional -->
+      <div class="mt-12 grid md:grid-cols-2 gap-8">
+        <div class="bg-white p-6 rounded-lg border border-gray-200">
+          <h3 class="text-lg font-semibold text-gray-900 mb-3">
+            ¿Qué es el CAE?
+          </h3>
+          <p class="text-gray-600 text-sm">
+            La Carga Anual Equivalente (CAE) es un indicador que representa el
+            costo total del crédito, incluyendo intereses, comisiones, seguros y
+            gastos. Permite comparar diferentes ofertas de crédito.
+          </p>
+        </div>
+
+        <div class="bg-white p-6 rounded-lg border border-gray-200">
+          <h3 class="text-lg font-semibold text-gray-900 mb-3">
+            ¿Qué es el CTC?
+          </h3>
+          <p class="text-gray-600 text-sm">
+            El Costo Total del Crédito (CTC) es la diferencia entre el total que
+            pagas (cuotas) y el monto que solicitaste. Representa cuánto te
+            cuesta en pesos tomar el crédito.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>

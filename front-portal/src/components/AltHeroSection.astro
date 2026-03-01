@@ -1,0 +1,18 @@
+---
+export interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = "Descripción por defecto" } = Astro.props;
+---
+
+<section class="bg-linear-to-br from-primary-600 to-primary-800 text-white">
+  <div class="section-container py-16">
+    <div class="max-w-3xl">
+      <h1 class="text-4xl md:text-5xl font-bold mb-4">{title}</h1>
+
+      <p class="text-lg text-primary-100">{description}</p>
+    </div>
+  </div>
+</section>
