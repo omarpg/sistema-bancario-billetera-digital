@@ -1,8 +1,8 @@
 # 💰 Billetera Digital
 
-Aplicación web full-stack de billetera digital que simula funcionalidades bancarias reales, incluyendo transferencias con autenticación de dos factores, gestión de contactos, y administración de múltiples cuentas.
+Aplicación web full-stack de sistema financiero que simula funcionalidades bancarias reales, incluyendo transferencias con autenticación de dos factores, gestión de contactos, y administración de múltiples cuentas.
 
-> **Nota:** Este es un proyecto de portafolio/demostración. No debe usarse con datos financieros reales.
+> **Nota:** Este es un proyecto de portafolio/demostración. No debe usarse con datos reales.
 
 ---
 
@@ -36,16 +36,16 @@ Aplicación web full-stack de billetera digital que simula funcionalidades banca
 ## 🚀 Características Principales
 
 ### 🌐 Portal Público (Astro)
-- ✅ Landing page optimizada (Lighthouse 100/100 en todas las métricas)
+- ✅ Página web corporativa optimizada (Lighthouse 100/100 en todas las métricas)
 - ✅ Simulador de crédito con cálculos en tiempo real
 - ✅ Indicadores económicos (UF, USD, EUR) desde API pública
-- ✅ Sistema de registro conectado al backend
+- ✅ Sistema de registro de usuarios conectado al backend
 - ✅ SEO completo (sitemap, robots.txt, meta tags, JSON-LD)
 - ✅ Diseño responsive y accesible
 
 ### 🔐 Autenticación y Seguridad
 - ✅ JWT (JSON Web Tokens) para autenticación
-- ✅ Autenticación de dos factores (2FA) con OTP por email
+- ✅ Autenticación de dos factores (2FA) con OTP por email/rut
 - ✅ Encriptación de contraseñas con BCrypt
 - ✅ Validación de RUT chileno
 - ✅ Protección de rutas en frontend y backend
@@ -129,11 +129,12 @@ Aplicación web full-stack de billetera digital que simula funcionalidades banca
 | React Hot Toast | -       | Notificaciones           |
 
 ### Frontend - Portal Público
-| Tecnología   | Versión | Propósito          |
-| ------------ | ------- | ------------------ |
-| Astro        | 5       | Framework estático |
-| Tailwind CSS | 4.x     | Estilos            |
-| TypeScript   | 5.x     | Tipado estático    |
+| Tecnología   | Versión | Propósito             |
+| ------------ | ------- | --------------------- |
+| Astro        | 5       | Framework estático    |
+| Tailwind CSS | 4.x     | Estilos               |
+| TypeScript   | 5.x     | Tipado estático       |
+| React        | 19      | Simulación de crédito |
 
 ### Base de Datos
 - **PostgreSQL 16** en Supabase
@@ -155,22 +156,17 @@ Aplicación web full-stack de billetera digital que simula funcionalidades banca
 
 ### 1️⃣ Clonar el Repositorio
 ```bash
-git clone https://github.com/tu-usuario/billetera-digital.git
-cd billetera-digital
+git clone https://github.com/omarpg/sistema-bancario-billetera-digital.git
+cd sistema-bancario-billetera-digital
 ```
 
 ---
 
 ### 2️⃣ Configurar Base de Datos
 
-#### Opción A: Usar Supabase (Recomendado)
+#### Opción A: Usar Supabase
 
-1. Crear cuenta en [Supabase](https://supabase.com)
-2. Crear nuevo proyecto
-3. Ejecutar el script SQL en el editor SQL:
-```sql
--- Ver archivo: database/schema.sql
-```
+1. Proyecto ya está arriba, si por inactividad deja de estarlo usar opción B.
 
 #### Opción B: PostgreSQL Local
 
@@ -190,32 +186,9 @@ psql -U postgres -d billetera_digital -f database/schema.sql
 
 #### Configurar Variables de Entorno
 
-Crear archivo `backend/src/main/resources/application.properties`:
-```properties
-# Database Configuration
-spring.datasource.url=jdbc:postgresql://localhost:5432/billetera_digital
-spring.datasource.username=tu_usuario
-spring.datasource.password=tu_password
-
-# JPA Configuration
-spring.jpa.hibernate.ddl-auto=update
-spring.jpa.show-sql=false
-spring.jpa.properties.hibernate.format_sql=true
-spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
-
-# JWT Configuration
-jwt.secret=tu-clave-secreta-muy-larga-y-segura-de-al-menos-256-bits
-jwt.expiration=86400000
-
-# Email Configuration (opcional para OTP por email)
-spring.mail.host=smtp.gmail.com
-spring.mail.port=587
-spring.mail.username=tu-email@gmail.com
-spring.mail.password=tu-app-password
-
-# Server Configuration
-server.port=8080
-```
+1. En la carpeta backend/src/main/resources haz una copia de application-example.properties
+2. Renombra a application.properties
+3. Coloca los datos que corresponde
 
 #### Instalar Dependencias y Ejecutar
 ```bash
@@ -235,6 +208,7 @@ El backend estará disponible en `http://localhost:8080`
 Crear archivo `dashboard/.env.local`:
 ```env
 NEXT_PUBLIC_API_URL=http://localhost:8080/api
+NEXT_PUBLIC_PORTAL_URL=http://localhost:4321
 ```
 
 #### Instalar Dependencias y Ejecutar
@@ -321,28 +295,6 @@ billetera-digital/
 
 ---
 
-## 🔐 Variables de Entorno
-
-### Backend (`application.properties`)
-
-| Variable                     | Descripción                            | Ejemplo                                      |
-| ---------------------------- | -------------------------------------- | -------------------------------------------- |
-| `spring.datasource.url`      | URL de conexión PostgreSQL             | `jdbc:postgresql://localhost:5432/billetera` |
-| `spring.datasource.username` | Usuario de base de datos               | `postgres`                                   |
-| `spring.datasource.password` | Contraseña de base de datos            | `tu_password`                                |
-| `jwt.secret`                 | Clave secreta para JWT (min. 256 bits) | `clave-super-secreta-256-bits`               |
-| `jwt.expiration`             | Tiempo de expiración del token (ms)    | `86400000` (24h)                             |
-| `spring.mail.username`       | Email para envío de OTP (opcional)     | `tu-email@gmail.com`                         |
-| `spring.mail.password`       | Contraseña de aplicación de email      | `app-password`                               |
-
-### Frontend Dashboard (`.env.local`)
-
-| Variable              | Descripción     | Ejemplo                     |
-| --------------------- | --------------- | --------------------------- |
-| `NEXT_PUBLIC_API_URL` | URL del backend | `http://localhost:8080/api` |
-
----
-
 ## 📊 Arquitectura del Sistema
 
 ### Flujo de Autenticación
@@ -405,39 +357,6 @@ npm run test
 # Portal
 cd front-portal
 npm run test
-```
-
----
-
-## 🚀 Deployment
-
-### Backend
-
-**Opción 1: Heroku**
-```bash
-heroku create billetera-backend
-git subtree push --prefix backend heroku main
-```
-
-**Opción 2: Railway**
-```bash
-railway up
-```
-
-### Frontend Dashboard
-
-**Vercel (Recomendado)**
-```bash
-cd dashboard
-vercel
-```
-
-### Frontend Portal
-
-**Vercel**
-```bash
-cd front-portal
-vercel
 ```
 
 ---
