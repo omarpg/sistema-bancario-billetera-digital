@@ -417,4 +417,4 @@ Este proyecto está bajo la Licencia MIT. Ver archivo `LICENSE` para más detall
 
 ---
 
-**⭐ Proyecto con fines educativos**
+**⭐ Proyecto sin fines de lucro**
