@@ -78,19 +78,19 @@ backend/
 
 ## 🚀 Tecnologías
 
-| Categoría | Tecnología | Versión | Propósito |
-|-----------|-----------|---------|-----------|
-| **Lenguaje** | Java | 17 LTS | Base del proyecto |
-| **Framework** | Spring Boot | 3.5.10 | Framework web + DI |
-| **ORM** | Hibernate (JPA) | 6.6.x | Mapeo objeto-relacional |
-| **Seguridad** | Spring Security | 6.x | Autenticación y autorización |
-| **Base de datos** | PostgreSQL | 17.6 | BD relacional (Supabase) |
-| **Tokens** | JJWT | 0.12.x | Generación y validación JWT |
-| **Pool de conexiones** | HikariCP | 6.x | Gestión eficiente de conexiones |
-| **Validación** | Hibernate Validator | 8.x | Validación de DTOs |
-| **Utilidades** | Lombok | 1.18.x | Reducción de boilerplate |
-| **Testing** | JUnit 5 + Mockito | 5.x | Pruebas unitarias |
-| **Build** | Maven | 3.9+ | Gestión de dependencias |
+| Categoría              | Tecnología          | Versión | Propósito                       |
+|------------------------|---------------------|---------|---------------------------------|
+| **Lenguaje**           | Java                | 17 LTS  | Base del proyecto               |
+| **Framework**          | Spring Boot         | 3.5.10  | Framework web + DI              |
+| **ORM**                | Hibernate (JPA)     | 6.6.x   | Mapeo objeto-relacional         |
+| **Seguridad**          | Spring Security     | 6.x     | Autenticación y autorización    |
+| **Base de datos**      | PostgreSQL          | 17.6    | BD relacional (Supabase)        |
+| **Tokens**             | JJWT                | 0.12.x  | Generación y validación JWT     |
+| **Pool de conexiones** | HikariCP            | 6.x     | Gestión eficiente de conexiones |
+| **Validación**         | Hibernate Validator | 8.x     | Validación de DTOs              |
+| **Utilidades**         | Lombok              | 1.18.x  | Reducción de boilerplate        |
+| **Testing**            | JUnit 5 + Mockito   | 5.x     | Pruebas unitarias               |
+| **Build**              | Maven               | 3.9+    | Gestión de dependencias         |
 
 ---
 
@@ -168,41 +168,41 @@ Respuesta esperada:
 
 ### Autenticación
 
-| Método | Endpoint | Descripción | Auth |
-|--------|----------|-------------|------|
-| POST | `/api/auth/register` | Registro de nuevo usuario | No |
-| POST | `/api/auth/login` | Login (retorna JWT) | No |
-| POST | `/api/auth/verify-otp` | Validar código 2FA | Parcial |
+| Método | Endpoint               | Descripción               | Auth    |
+|--------|------------------------|---------------------------|---------|
+| POST   | `/api/auth/register`   | Registro de nuevo usuario | No      |
+| POST   | `/api/auth/login`      | Login (retorna JWT)       | No      |
+| POST   | `/api/auth/verify-otp` | Validar código 2FA        | Parcial |
 
 ### Cuentas
 
-| Método | Endpoint | Descripción | Auth |
-|--------|----------|-------------|------|
-| GET | `/api/accounts` | Listar cuentas del usuario | Sí |
-| GET | `/api/accounts/{id}` | Detalle de cuenta específica | Sí |
+| Método | Endpoint             | Descripción                  | Auth |
+|--------|----------------------|------------------------------|------|
+| GET    | `/api/accounts`      | Listar cuentas del usuario   | Sí   |
+| GET    | `/api/accounts/{id}` | Detalle de cuenta específica | Sí   |
 
 ### Transferencias
 
-| Método | Endpoint | Descripción | Auth |
-|--------|----------|-------------|------|
-| POST | `/api/transfers/initiate` | Iniciar transferencia (genera OTP) | Sí |
-| POST | `/api/transfers/confirm` | Confirmar con OTP y ejecutar | Sí |
-| GET | `/api/transfers/{id}/receipt` | Descargar comprobante PDF | Sí |
+| Método | Endpoint                      | Descripción                        | Auth |
+|--------|-------------------------------|------------------------------------|------|
+| POST   | `/api/transfers/initiate`     | Iniciar transferencia (genera OTP) | Sí   |
+| POST   | `/api/transfers/confirm`      | Confirmar con OTP y ejecutar       | Sí   |
+| GET    | `/api/transfers/{id}/receipt` | Descargar comprobante PDF          | Sí   |
 
 ### Contactos
 
-| Método | Endpoint | Descripción | Auth |
-|--------|----------|-------------|------|
-| GET | `/api/contacts` | Listar agenda | Sí |
-| POST | `/api/contacts` | Agregar contacto | Sí |
-| PUT | `/api/contacts/{id}` | Editar contacto | Sí |
-| DELETE | `/api/contacts/{id}` | Eliminar contacto | Sí |
+| Método | Endpoint             | Descripción       | Auth |
+|--------|----------------------|-------------------|------|
+| GET    | `/api/contacts`      | Listar agenda     | Sí   |
+| POST   | `/api/contacts`      | Agregar contacto  | Sí   |
+| PUT    | `/api/contacts/{id}` | Editar contacto   | Sí   |
+| DELETE | `/api/contacts/{id}` | Eliminar contacto | Sí   |
 
 ### Dashboard
 
-| Método | Endpoint | Descripción | Auth |
-|--------|----------|-------------|------|
-| GET | `/api/dashboard/summary` | Posición consolidada + gráficos | Sí |
+| Método | Endpoint                 | Descripción                     | Auth |
+|--------|--------------------------|---------------------------------|------|
+| GET    | `/api/dashboard/summary` | Posición consolidada + gráficos | Sí   |
 
 **Auth:** Indica si requiere token JWT en header `Authorization: Bearer {token}`
 
