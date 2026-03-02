@@ -166,9 +166,12 @@ cd sistema-bancario-billetera-digital
 
 #### Opción A: Usar Supabase
 
-1. Proyecto ya está arriba, si por inactividad deja de estarlo usar opción B.
+1. Crear cuenta de supabase e ingresar o loguearse si ya existe
+2. Crear proyecto Billetera-digital
+3. Ejecutar script en SQL Editor (backend/database/schema.sql)
+4. Guardar url, username y password para agregarlos a las properties
 
-#### Opción B: PostgreSQL Local
+#### Opción B: PostgreSQL Local (pendiente explicar)
 
 1. Crear base de datos:
 ```sql
@@ -177,7 +180,7 @@ CREATE DATABASE billetera_digital;
 
 2. Ejecutar scripts de creación:
 ```bash
-psql -U postgres -d billetera_digital -f database/schema.sql
+psql -U postgres -d billetera_digital -f backend/database/schema.sql
 ```
 
 ---
@@ -186,9 +189,8 @@ psql -U postgres -d billetera_digital -f database/schema.sql
 
 #### Configurar Variables de Entorno
 
-1. En la carpeta backend/src/main/resources haz una copia de application-example.properties
-2. Renombra a application.properties
-3. Coloca los datos que corresponde
+1. En la carpeta backend/src/main/resources abre application.properties
+2. Agrega la url, username y password correspondiente a la base de datos
 
 #### Instalar Dependencias y Ejecutar
 ```bash
@@ -205,7 +207,7 @@ El backend estará disponible en `http://localhost:8080`
 
 #### Configurar Variables de Entorno
 
-Crear archivo `dashboard/.env.local`:
+Crear archivo `front-dashboard/.env.local` y agregar:
 ```env
 NEXT_PUBLIC_API_URL=http://localhost:8080/api
 NEXT_PUBLIC_PORTAL_URL=http://localhost:4321
@@ -238,7 +240,10 @@ El portal estará disponible en `http://localhost:4321`
 ## 🗄️ Estructura del Proyecto
 ```
 billetera-digital/
-├── backend/                    # Spring Boot Backend
+├── backend/
+│   ├── database/
+│   │   ├── schema.sql
+│   │   └── seed.sql (opcional)
 │   ├── src/
 │   │   ├── main/
 │   │   │   ├── java/com/billetera/backend/
@@ -246,21 +251,29 @@ billetera-digital/
 │   │   │   │   ├── controller/     # REST Controllers
 │   │   │   │   ├── dto/            # Data Transfer Objects
 │   │   │   │   ├── entity/         # Entidades JPA
+│   │   │   │   ├── exception/      # Manejo de excepciones
 │   │   │   │   ├── repository/     # Repositorios Spring Data
 │   │   │   │   ├── service/        # Lógica de negocio
-│   │   │   │   ├── util/           # Utilidades (JWT, validadores)
-│   │   │   │   └── exception/      # Manejo de excepciones
+│   │   │   │   └── util/           # Utilidades (JWT, validadores)
 │   │   │   └── resources/
 │   │   │       └── application.properties
-│   │   └── test/               # Tests unitarios
-│   └── pom.xml
+│   │   └── test/
+│   │       ├── java/com/billetera/backend/
+│   │       │   ├── service/        # Test de auth service
+│   │       │   └── util/           # Test validador de rut
+│   │       └── resources/
+│   │           └── application-test.properties
+│   ├── pom.xml
+│   └── README.md
 │
-├── dashboard/                  # Next.js Dashboard
+├── front-dashboard/
 │   ├── src/
 │   │   ├── app/
 │   │   │   ├── (auth)/         # Rutas de autenticación
 │   │   │   ├── (dashboard)/    # Rutas del dashboard
-│   │   │   └── layout.tsx
+│   │   │   ├── globals.css     # Estilos globales
+│   │   │   ├── layout.tsx      # Layout de inicio de sesión
+│   │   │   └── page.tsx        # Página de inicio de sesión
 │   │   ├── components/
 │   │   │   ├── dashboard/      # Componentes específicos
 │   │   │   └── ui/             # Componentes reutilizables
@@ -269,23 +282,22 @@ billetera-digital/
 │   │   ├── types/              # TypeScript types
 │   │   └── styles/
 │   ├── public/
-│   └── package.json
+│   ├── package.json
+│   └── README.md
 │
-├── front-portal/               # Astro Portal Público
+├── front-portal/
 │   ├── src/
-│   │   ├── components/
-│   │   ├── layouts/
-│   │   ├── pages/
-│   │   ├── styles/
-│   │   └── utils/
+│   │   ├── assets/           # Svgs, logos, etc
+│   │   ├── components/       # Componentes generales
+│   │   ├── layouts/          # Layout general
+│   │   ├── pages/            # Páginas principales enrutadas
+│   │   ├── styles/           # Estilos globales
+│   │   └── utils/            # Data y tipos
+│   │       └── types/        
 │   ├── public/
 │   └── package.json
 │
-├── database/                   # Scripts SQL
-│   ├── schema.sql
-│   └── seed.sql (opcional)
-│
-├── docs/                       # Documentación
+├── docs/
 │   ├── screenshots/
 │   ├── architecture/
 │   └── api/
@@ -377,7 +389,7 @@ npm run test
 
 ## 🐛 Limitaciones aceptadas
 
-- [ ] El sistema de OTP por email requiere configuración SMTP adicional
+- [ ] El sistema de OTP por email requiere configuración SMTP adicional, por ahora se ve en consola
 - [ ] Los indicadores económicos dependen de disponibilidad de mindicador.cl
 - [ ] El comprobante se descarga como HTML (requiere conversión manual a PDF)
 
@@ -399,10 +411,8 @@ Este proyecto está bajo la Licencia MIT. Ver archivo `LICENSE` para más detall
 
 ## 👨‍💻 Autor
 
-- GitHub: [@tu-usuario](https://github.com/tu-usuario)
-- LinkedIn: [Tu Perfil](https://linkedin.com/in/tu-perfil)
-- Portfolio: [tu-sitio.com](https://tu-sitio.com)
-- Email: tu-email@ejemplo.com
+- GitHub: [@tu-usuario](https://github.com/omarpg)
+- Email: om.ponce.g@gmail.com
 
 ---
 
