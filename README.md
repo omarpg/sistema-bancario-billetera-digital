@@ -193,6 +193,9 @@ psql -U postgres -d billetera_digital -f backend/database/schema.sql
 2. Agrega la url, username y password correspondiente a la base de datos
 
 #### Instalar Dependencias y Ejecutar
+
+1. Dentro del IDE, click derecho encima del proyecto e instalar dependencias, actualizar o sync project dentro de maven.
+2. Ejecutar en consola:
 ```bash
 cd backend
 mvn clean install
@@ -239,7 +242,7 @@ El portal estará disponible en `http://localhost:4321`
 
 ## 🗄️ Estructura del Proyecto
 ```
-billetera-digital/
+sistema-bancario-billetera-digital/
 ├── backend/
 │   ├── database/
 │   │   ├── schema.sql
@@ -411,7 +414,7 @@ Este proyecto está bajo la Licencia MIT. Ver archivo `LICENSE` para más detall
 
 ## 👨‍💻 Autor
 
-- GitHub: [@tu-usuario](https://github.com/omarpg)
+- GitHub: [@omarpg](https://github.com/omarpg)
 - Email: om.ponce.g@gmail.com
 
 ---
