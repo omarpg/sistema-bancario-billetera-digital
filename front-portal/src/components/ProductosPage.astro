@@ -1,0 +1,105 @@
+---
+import AltHeroSection from "./AltHeroSection.astro";
+import { productos } from "../utils/data.ts";
+---
+
+<main>
+  <!-- Alt Hero Section -->
+  <AltHeroSection
+    title="Nuestros Productos"
+    description="Soluciones bancarias diseñadas para ti. Sin comisiones ocultas, sin sorpresas."
+  />
+
+  <!-- Productos -->
+  <section class="section-container">
+    <div class="space-y-12">
+      {
+        productos.map((producto, index) => (
+          <div
+            id={producto.id}
+            class={`grid md:grid-cols-2 gap-8 items-center ${
+              index % 2 === 1 ? "md:flex-row-reverse" : ""
+            }`}
+          >
+            <div class={index % 2 === 1 ? "md:order-2" : ""}>
+              <div class="w-16 h-16 bg-primary-100 rounded-lg flex items-center justify-center mb-6">
+                <svg
+                  class="w-8 h-8 text-primary-600"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d={producto.icono}
+                  />
+                </svg>
+              </div>
+              <h2 class="text-3xl font-bold text-gray-900 mb-4">
+                {producto.titulo}
+              </h2>
+              <p class="text-lg text-gray-600 mb-6">{producto.descripcion}</p>
+              <ul class="space-y-3 mb-8">
+                {producto.caracteristicas.map((caracteristica) => (
+                  <li class="flex items-start">
+                    <svg
+                      class="w-6 h-6 text-secondary-500 mr-2 shrink-0"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                    <span class="text-gray-700">{caracteristica}</span>
+                  </li>
+                ))}
+              </ul>
+              <a href="/registro" class="btn-primary inline-block">
+                Abrir Cuenta
+              </a>
+            </div>
+            <div
+              class={`bg-linear-to-br ${
+                index % 2 === 0
+                  ? "from-primary-100 to-primary-200"
+                  : "from-secondary-100 to-secondary-200"
+              } rounded-2xl p-12 h-80 flex items-center justify-center ${
+                index % 2 === 1 ? "md:order-1" : ""
+              }`}
+            >
+              <svg
+                class="w-48 h-48 opacity-20"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path d={producto.icono} />
+              </svg>
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="bg-primary-50">
+    <div class="section-container text-center">
+      <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
+        ¿Listo para comenzar?
+      </h2>
+      <p class="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
+        Abre tu cuenta en minutos y accede a todos nuestros productos.
+      </p>
+      <a href="/registro" class="btn-primary inline-block text-lg">
+        Abrir Cuenta Gratis
+      </a>
+    </div>
+  </section>
+</main>

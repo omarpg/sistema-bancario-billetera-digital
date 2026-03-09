@@ -1,0 +1,80 @@
+---
+interface Props {
+  nombre: string;
+  valor: number;
+  fecha: string;
+  icono: string;
+  loading?: boolean;
+}
+
+const { nombre, valor, fecha, icono, loading = false } = Astro.props;
+
+const formatCurrency = (value: number) => {
+  return new Intl.NumberFormat("es-CL", {
+    style: "currency",
+    currency: "CLP",
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(value);
+};
+
+const formatDate = (dateString: string) => {
+  const date = new Date(dateString);
+  return new Intl.DateTimeFormat("es-CL", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  }).format(date);
+};
+---
+
+<div
+  class="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow p-6"
+>
+  <div class="flex items-start justify-between mb-4">
+    <div
+      class="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center"
+    >
+      <svg
+        class="w-6 h-6 text-primary-600"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d={icono}></path>
+      </svg>
+    </div>
+    {
+      !loading && (
+        <span class="px-2 py-1 bg-secondary-100 text-secondary-700 text-xs font-medium rounded">
+          En vivo
+        </span>
+      )
+    }
+  </div>
+
+  <h2 class="text-lg font-semibold text-gray-900 mb-2">
+    {nombre}
+  </h2>
+
+  {
+    loading ? (
+      <div class="animate-pulse">
+        <div class="h-8 bg-gray-200 rounded w-32 mb-2" />
+        <div class="h-4 bg-gray-200 rounded w-24" />
+      </div>
+    ) : (
+      <>
+        <p class="text-3xl font-bold text-primary-600 mb-1">
+          {formatCurrency(valor)}
+        </p>
+        <p class="text-sm text-gray-500">Actualizado: {formatDate(fecha)}</p>
+      </>
+    )
+  }
+</div>
