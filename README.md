@@ -177,15 +177,15 @@ cd sistema-bancario-billetera-digital
 # En la raíz del proyecto
 docker-compose up --build
 ```
-**Primera vez tarda ~3-5 minutos** (descarga imágenes y compila)
+  **Primera vez tarda ~3-5 minutos** (descarga imágenes y compila)
 
 3. Levantar front-dashboard
-- Crear archivo `front-dashboard/.env.local` y agregar:
+   - Crear archivo `front-dashboard/.env.local` y agregar:
 ```env
 NEXT_PUBLIC_API_URL=http://localhost:8080/api
 NEXT_PUBLIC_PORTAL_URL=http://localhost:4321
 ```
-- Instalar Dependencias y Ejecutar
+   - Instalar Dependencias y Ejecutar
 ```bash
 # En /front-dashboard
 npm install
@@ -195,7 +195,7 @@ npm run dev
 **Dashboard disponible en:** `http://localhost:3000`
 
 4. Levantar front-portal
-- Instalar Dependencias y Ejecutar
+   - Instalar Dependencias y Ejecutar
 ```bash
 # En /front-portal
 npm install
@@ -213,9 +213,9 @@ npm run dev
 2. Crear proyecto
 
 3. Configura:
-  - **Name:** `billetera-digital`
-  - **Database Password:** Genera una contraseña segura y **guárdala** ✅
-  - **Region:** Elige la más cercana (ej: South America)
+   - **Name:** `billetera-digital`
+   - **Database Password:** Genera una contraseña segura y **guárdala** ✅
+   - **Region:** Elige la más cercana (ej: South America)
 
 4. Anota los datos de host, post, database, user y password
 
@@ -226,7 +226,7 @@ npm run dev
 7. Click en **"Run"** (▶️)
 
 8. Busca el archivo `backend/src/main/resources/application.properties`
-  - Reemplaza los datos por los obtenidos de supabase en el punto 4:
+   - Reemplaza los datos por los obtenidos de supabase en el punto 4:
 ```properties
 # =============================================
 # DATABASE
@@ -236,19 +236,19 @@ spring.datasource.username=USER_SUPABASE_AQUI
 spring.datasource.password=TU_PASSWORD_SUPABASE_AQUI
 ```
 
-9. Guardar cambios y ejecutar backend (o correr en el IDE directamente ▶️)
+1. Guardar cambios y ejecutar backend (o correr en el IDE directamente ▶️)
 ```bash
 # En /backend Instalar dependencias y ejecutar
 mvn spring-boot:run
 ```
 
-10. Levantar front-dashboard
-- Crear archivo `front-dashboard/.env.local` y agregar:
+1. Levantar front-dashboard
+   - Crear archivo `front-dashboard/.env.local` y agregar:
 ```env
 NEXT_PUBLIC_API_URL=http://localhost:8080/api
 NEXT_PUBLIC_PORTAL_URL=http://localhost:4321
 ```
-- Instalar Dependencias y Ejecutar
+   - Instalar Dependencias y Ejecutar
 ```bash
 # En /front-dashboard
 npm install
@@ -258,7 +258,7 @@ npm run dev
 **Dashboard disponible en:** `http://localhost:3000`
 
 11. Levantar front-portal
-- Instalar Dependencias y Ejecutar
+   - Instalar Dependencias y Ejecutar
 ```bash
 # En /front-portal
 npm install
