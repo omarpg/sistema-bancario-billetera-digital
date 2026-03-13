@@ -180,12 +180,12 @@ docker-compose up --build
   **Primera vez tarda ~3-5 minutos** (descarga imágenes y compila)
 
 3. Levantar front-dashboard
-  - Crear archivo `front-dashboard/.env.local` y agregar:
+  1. Crear archivo `front-dashboard/.env.local` y agregar:
 ```env
 NEXT_PUBLIC_API_URL=http://localhost:8080/api
 NEXT_PUBLIC_PORTAL_URL=http://localhost:4321
 ```
-  - Instalar Dependencias y Ejecutar
+  2. Instalar Dependencias y Ejecutar
 ```bash
 # En /front-dashboard
 npm install
@@ -217,7 +217,7 @@ npm run dev
   - **Database Password:** Genera una contraseña segura y **guárdala** ✅
   - **Region:** Elige la más cercana (ej: South America)
 
-4. Anota los datos de host, post, database, user y password
+4. Anota los datos de host, port, database, user y password
 
 5. Abre el archivo `backend/database/schema-supabase.sql` 
 
