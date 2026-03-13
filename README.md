@@ -163,70 +163,106 @@ cd sistema-bancario-billetera-digital
 
 ---
 
-### Se puede ejecutar el proyecto de **dos formas**:
+### 🚀 Ejecución del Proyecto
 
-- **🐳 Opción A: Docker** - PostgreSQL local en contenedor (recomendado para empezar)
-- **☁️ Opción B: Supabase** - PostgreSQL en la nube
+El proyecto puede ejecutarse de **dos formas**:
 
-#### 🐳 Opción A: Ejecución con Docker
+- **🐳 Opción A:** Docker — PostgreSQL local en contenedor  
+- **☁️ Opción B:** Supabase — PostgreSQL en la nube
 
-1. **Docker Desktop** instalado y corriendo
+---
 
-2. Levantar Backend + PostgreSQL con Docker
+### 🐳 Opción A — Ejecución con Docker (Recomendada)
+
+#### 1. Requisitos previos
+- **Docker Desktop** instalado y en ejecución.
+
+#### 2. Levantar Backend + PostgreSQL
+
+En la raíz del proyecto:
+
 ```bash
-# En la raíz del proyecto
 docker-compose up --build
 ```
-  **Primera vez tarda ~3-5 minutos** (descarga imágenes y compila)
 
-3. Levantar front-dashboard
-  1. Crear archivo `front-dashboard/.env.local` y agregar:
+> ⏳ **Primera ejecución:** puede tardar **3–5 minutos** (descarga + build).
+
+---
+
+#### 3. Levantar *front-dashboard*
+
+1. Crear archivo:  
+   `front-dashboard/.env.local`
+2. Agregar:
+
 ```env
 NEXT_PUBLIC_API_URL=http://localhost:8080/api
 NEXT_PUBLIC_PORTAL_URL=http://localhost:4321
 ```
-  2. Instalar Dependencias y Ejecutar
+
+3. Instalar dependencias y ejecutar:
+
 ```bash
-# En /front-dashboard
+cd front-dashboard
 npm install
 npm run dev
 ```
 
-**Dashboard disponible en:** `http://localhost:3000`
-
-4. Levantar front-portal
-  - Instalar Dependencias y Ejecutar
-```bash
-# En /front-portal
-npm install
-npm run dev
-```
-
-**Portal disponible en:** `http://localhost:4321`
+📍 **Dashboard disponible en:**  
+http://localhost:3000
 
 ---
 
-#### ☁️ Opción B: Ejecución con Supabase
+#### 4. Levantar *front-portal*
 
-1. Cuenta de **Supabase** (crear si no tienes) - [Crear cuenta](https://supabase.com)
+```bash
+cd front-portal
+npm install
+npm run dev
+```
 
-2. Crear proyecto
+📍 **Portal disponible en:**  
+http://localhost:4321
 
-3. Configura:
-  - **Name:** `billetera-digital`
-  - **Database Password:** Genera una contraseña segura y **guárdala** ✅
-  - **Region:** Elige la más cercana (ej: South America)
+---
 
-4. Anota los datos de host, port, database, user y password
+### ☁️ Opción B — Ejecución con Supabase
 
-5. Abre el archivo `backend/database/schema-supabase.sql` 
+#### 1. Crear cuenta en Supabase
+Si no tienes una, crea una en: https://supabase.com
 
-6. Copia el contenido y pégalo en el SQL Editor de Supabase
+#### 2. Crear nuevo proyecto
 
-7. Click en **"Run"** (▶️)
+Configurar:
 
-8. Busca el archivo `backend/src/main/resources/application.properties`
-  - Reemplaza los datos por los obtenidos de supabase en el punto 4:
+- **Name:** `billetera-digital`  
+- **Database Password:** generar una contraseña segura y **guardarla**  
+- **Region:** la más cercana (ej: *South America*)
+
+#### 3. Obtener credenciales
+Toma nota de:
+- Host  
+- Port  
+- Database  
+- User  
+- Password  
+
+#### 4. Ejecutar esquema inicial
+
+1. Abrir archivo:  
+   `backend/database/schema-supabase.sql`
+2. Copiar y pegar en el **SQL Editor** de Supabase.
+3. Ejecutar con **Run** ▶️
+
+---
+
+#### 5. Configurar conexión del backend
+
+Editar:  
+`backend/src/main/resources/application.properties`
+
+Reemplazar con tus datos:
+
 ```properties
 # =============================================
 # DATABASE
@@ -236,36 +272,54 @@ spring.datasource.username=USER_SUPABASE_AQUI
 spring.datasource.password=TU_PASSWORD_SUPABASE_AQUI
 ```
 
-1. Guardar cambios y ejecutar backend (o correr en el IDE directamente ▶️)
+---
+
+#### 6. Ejecutar backend
+
+1. Correr en el IDE directamente ▶️ o:
+2. Ejecutar:
+
 ```bash
-# En /backend Instalar dependencias y ejecutar
+cd backend
 mvn spring-boot:run
 ```
 
-1. Levantar front-dashboard
-  - Crear archivo `front-dashboard/.env.local` y agregar:
+---
+
+#### 7. Levantar *front-dashboard*
+
+1. Crear archivo:  
+   `front-dashboard/.env.local`
+2. Agregar:
+
 ```env
 NEXT_PUBLIC_API_URL=http://localhost:8080/api
 NEXT_PUBLIC_PORTAL_URL=http://localhost:4321
 ```
-  - Instalar Dependencias y Ejecutar
+
+3. Instalar y ejecutar:
+
 ```bash
-# En /front-dashboard
+cd front-dashboard
 npm install
 npm run dev
 ```
 
-**Dashboard disponible en:** `http://localhost:3000`
+📍 **Dashboard disponible en:**  
+http://localhost:3000
 
-11. Levantar front-portal
-  - Instalar Dependencias y Ejecutar
+---
+
+#### 8. Levantar *front-portal*
+
 ```bash
-# En /front-portal
+cd front-portal
 npm install
 npm run dev
 ```
 
-**Portal disponible en:** `http://localhost:4321`
+📍 **Portal disponible en:**  
+http://localhost:4321
 
 ---
 
