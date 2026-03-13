@@ -214,18 +214,34 @@ public class AuthService {
      * Helper: Buscar usuario por RUT o email
      */
     private User findByIdentifier(String identifier) {
-        // Intentar normalizar como RUT
-        String normalized = rutValidator.normalize(identifier);
 
-        // Primero intentar buscar por RUT
-        if (rutValidator.isValid(normalized)) {
-            return userRepository.findByRut(normalized)
-                    .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
+        System.out.println("╔════════════════════════════════════╗");
+        System.out.println("║  FIND BY IDENTIFIER - DEBUG        ║");
+        System.out.println("╠════════════════════════════════════╣");
+        System.out.println("║ Input: " + identifier);
+        System.out.println("║ Contiene @: " + identifier.contains("@"));
+        System.out.println("╚════════════════════════════════════╝");
+
+        // Primero intentar como email
+        if (identifier.contains("@")) {
+            System.out.println("→ Buscando por EMAIL");
+            return userRepository.findByEmail(identifier)
+                    .orElseThrow(() -> new BadRequestException("Credenciales incorrectas"));
         }
 
-        // Si no es RUT válido, intentar buscar por email
-        return userRepository.findByEmail(identifier)
-                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
+        // Si no tiene @, intentar normalizar como RUT
+        System.out.println("→ Buscando por RUT");
+        String normalized = rutValidator.normalize(identifier);
+        System.out.println("→ RUT normalizado: " + normalized);
+
+        // Validar que sea un RUT válido
+        if (rutValidator.isValid(normalized)) {
+            return userRepository.findByRut(normalized)
+                    .orElseThrow(() -> new BadRequestException("Credenciales incorrectas"));
+        }
+
+        // Si llegamos aquí, no es ni email ni RUT válido
+        throw new BadRequestException("Formato de identificador inválido");
     }
 
     /**

@@ -1,0 +1,13 @@
+# Archivos a ignorar al construir la imagen Docker
+target/
+.mvn/
+mvnw
+mvnw.cmd
+*.log
+.git
+.gitignore
+.DS_Store
+*.md
+.idea/
+*.iml
+.vscode/

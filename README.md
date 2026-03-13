@@ -137,7 +137,7 @@ Aplicación web full-stack de sistema financiero que simula funcionalidades banc
 | React        | 19      | Simulación de crédito |
 
 ### Base de Datos
-- **PostgreSQL 16** en Supabase
+- **PostgreSQL 16** en Supabase y Dockerizando
 - 8 tablas principales: `users`, `accounts`, `transactions`, `contacts`, `notifications`, `otp_codes`, `currency_rates`, `audit_logs`
 
 ---
@@ -151,10 +151,11 @@ Aplicación web full-stack de sistema financiero que simula funcionalidades banc
 - **PostgreSQL 16** (o cuenta de Supabase)
 - **Maven 3.8** o superior
 - **npm** o **pnpm**
+- **Docker Desktop** y virtualización activada
 
 ---
 
-### 1️⃣ Clonar el Repositorio
+### Clonar el Repositorio
 ```bash
 git clone https://github.com/omarpg/sistema-bancario-billetera-digital.git
 cd sistema-bancario-billetera-digital
@@ -162,81 +163,98 @@ cd sistema-bancario-billetera-digital
 
 ---
 
-### 2️⃣ Configurar Base de Datos
+### Se puede ejecutar el proyecto de **dos formas**:
 
-#### Opción A: Usar Supabase
+- **🐳 Opción A: Docker** - PostgreSQL local en contenedor (recomendado para empezar)
+- **☁️ Opción B: Supabase** - PostgreSQL en la nube
 
-1. Crear cuenta de supabase e ingresar o loguearse si ya existe
-2. Crear proyecto Billetera-digital
-3. Ejecutar script en SQL Editor (backend/database/schema.sql)
-4. Guardar url, username y password para agregarlos a las properties
+#### 🐳 Opción A: Ejecución con Docker
 
-#### Opción B: PostgreSQL Local (pendiente explicar)
-
-1. Crear base de datos:
-```sql
-CREATE DATABASE billetera_digital;
-```
-
-2. Ejecutar scripts de creación:
+1. **Docker Desktop** instalado y corriendo
+2. Levantar Backend + PostgreSQL con Docker
 ```bash
-psql -U postgres -d billetera_digital -f backend/database/schema.sql
+# En la raíz del proyecto
+docker-compose up --build
 ```
-
----
-
-### 3️⃣ Backend (Spring Boot)
-
-#### Configurar Variables de Entorno
-
-1. En la carpeta backend/src/main/resources abre application.properties
-2. Agrega la url, username y password correspondiente a la base de datos
-
-#### Instalar Dependencias y Ejecutar
-
-1. Dentro del IDE, click derecho encima del proyecto e instalar dependencias, actualizar o sync project dentro de maven.
-2. Ejecutar en consola:
-```bash
-cd backend
-mvn clean install
-mvn spring-boot:run
-```
-
-El backend estará disponible en `http://localhost:8080`
-
----
-
-### 4️⃣ Frontend - Dashboard (Next.js)
-
-#### Configurar Variables de Entorno
-
-Crear archivo `front-dashboard/.env.local` y agregar:
+**Primera vez tarda ~3-5 minutos** (descarga imágenes y compila).
+3. Levantar front-dashboard
+- Crear archivo `front-dashboard/.env.local` y agregar:
 ```env
 NEXT_PUBLIC_API_URL=http://localhost:8080/api
 NEXT_PUBLIC_PORTAL_URL=http://localhost:4321
 ```
-
-#### Instalar Dependencias y Ejecutar
+- Instalar Dependencias y Ejecutar
 ```bash
-cd dashboard
+# En /front-dashboard
 npm install
 npm run dev
 ```
 
-El dashboard estará disponible en `http://localhost:3000`
+**Dashboard disponible en:** `http://localhost:3000`
+
+4. Levantar front-portal
+- Instalar Dependencias y Ejecutar
+```bash
+# En /front-portal
+npm install
+npm run dev
+```
+
+**Portal disponible en:** `http://localhost:4321`
 
 ---
 
-### 5️⃣ Frontend - Portal (Astro)
+#### ☁️ Opción B: Ejecución con Supabase
 
-#### Instalar Dependencias y Ejecutar
+1. Cuenta de **Supabase** (crear si no tienes) - [Crear cuenta](https://supabase.com)
+2. Crear proyecto
+3. Configura:
+  - **Name:** `billetera-digital`
+  - **Database Password:** Genera una contraseña segura y **guárdala** ✅
+  - **Region:** Elige la más cercana (ej: South America)
+4. Anota los datos de host, post, database, user y password
+5. Abre el archivo `backend/database/schema-supabase.sql` 
+6. Copia el contenido y pégalo en el SQL Editor de Supabase
+7. Click en **"Run"** (▶️)
+8. Busca el archivo `backend/src/main/resources/application.properties`
+  - Reemplaza los datos por los obtenidos de supabase en el punto 4:
+```properties
+# =============================================
+# DATABASE
+# =============================================
+spring.datasource.url=jdbc:postgresql://db.xxxxxxxxxxxxx.supabase.co:5432/postgres
+spring.datasource.username=USER_SUPABASE_AQUI
+spring.datasource.password=TU_PASSWORD_SUPABASE_AQUI
+```
+9. Guardar cambios y ejecutar backend (o correr en el IDE directamente ▶️)
 ```bash
-cd front-portal
+# En /backend Instalar dependencias y ejecutar
+mvn spring-boot:run
+```
+10. Levantar front-dashboard
+- Crear archivo `front-dashboard/.env.local` y agregar:
+```env
+NEXT_PUBLIC_API_URL=http://localhost:8080/api
+NEXT_PUBLIC_PORTAL_URL=http://localhost:4321
+```
+- Instalar Dependencias y Ejecutar
+```bash
+# En /front-dashboard
 npm install
 npm run dev
 ```
 
-El portal estará disponible en `http://localhost:4321`
+**Dashboard disponible en:** `http://localhost:3000`
+
+11. Levantar front-portal
+- Instalar Dependencias y Ejecutar
+```bash
+# En /front-portal
+npm install
+npm run dev
+```
+
+**Portal disponible en:** `http://localhost:4321`
 
 ---
 
@@ -245,8 +263,9 @@ El portal estará disponible en `http://localhost:4321`
 sistema-bancario-billetera-digital/
 ├── backend/
 │   ├── database/
-│   │   ├── schema.sql
-│   │   └── seed.sql (opcional)
+│   │   ├── schema-docker.sql
+│   │   └── schema-supabase.sql
+│   ├── Dockerfile
 │   ├── src/
 │   │   ├── main/
 │   │   │   ├── java/com/billetera/backend/
@@ -300,11 +319,7 @@ sistema-bancario-billetera-digital/
 │   ├── public/
 │   └── package.json
 │
-├── docs/
-│   ├── screenshots/
-│   ├── architecture/
-│   └── api/
-│
+├── LICENSE
 └── README.md
 ```
 
