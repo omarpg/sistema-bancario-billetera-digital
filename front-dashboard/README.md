@@ -1,347 +1,270 @@
-# 📊 Billetera Digital — Dashboard
+# 💼 Dashboard - Billetera Digital
 
-> Aplicación web para usuarios autenticados. Dashboard bancario construido con Next.js 14, TypeScript, Tailwind CSS y shadcn/ui.
-
-[![Next.js](https://img.shields.io/badge/Next.js-14-black?logo=next.js)](https://nextjs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.3-blue?logo=typescript)](https://www.typescriptlang.org/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.4-38bdf8?logo=tailwind-css)](https://tailwindcss.com/)
-[![React](https://img.shields.io/badge/React-18-61dafb?logo=react)](https://react.dev/)
+Panel de administración web desarrollado con **Next.js 15** que permite a los usuarios gestionar sus cuentas bancarias, realizar transferencias y administrar contactos.
 
 ---
 
-## 📋 Descripción
+## 🚀 Stack Tecnológico
 
-Dashboard bancario privado que permite a usuarios autenticados interactuar con lo siguiente:
-
-- ✅ Login con autenticación 2FA (OTP de 6 dígitos)
-- ✅ Visualización de posición consolidada (saldo CLP + equivalente UF)
-- ✅ Gráfico de gastos mensuales con Recharts
-- ✅ Gestión de agenda de contactos (CRUD completo)
-- ✅ Transferencias electrónicas con confirmación OTP
-- ✅ Historial de movimientos con filtros avanzados
-- ✅ Centro de notificaciones en tiempo real
-- ✅ Panel de seguridad (sesiones activas, historial de eventos)
-- ✅ Generación y descarga de comprobantes PDF
-
-El proyecto muestra capacidades en desarrollo frontend moderno para apps financieras.
+- **Next.js 15.1** (App Router)
+- **React 19**
+- **TypeScript**
+- **Tailwind CSS 3.4**
+- **Zustand** (state management)
+- **Axios** (HTTP client)
+- **React Hot Toast** (notificaciones)
+- **Lucide Icons**
 
 ---
 
-## 🏗️ Arquitectura
-
-```
-┌─────────────────────────────────────────┐
-│         UI Components (shadcn/ui)       │
-│    Buttons, Dialogs, Forms, Tables      │
-└──────────────────┬──────────────────────┘
-                   │
-┌──────────────────▼──────────────────────┐
-│         Pages (App Router)              │
-│   /dashboard, /transferir, /contactos   │
-└──────────────────┬──────────────────────┘
-                   │
-┌──────────────────▼──────────────────────┐
-│       API Client (fetch + SWR)          │
-│     Consume REST API del backend        │
-└──────────────────┬──────────────────────┘
-                   │
-┌──────────────────▼──────────────────────┐
-│    Middleware (JWT validation)          │
-│   Protege rutas, valida autenticación   │
-└─────────────────────────────────────────┘
-```
-
-### Estructura del proyecto
-
+## 📁 Estructura del Proyecto
 ```
 front-dashboard/
-├── app/
-│   ├── (auth)/
-│   │   ├── login/            # Página de login
-│   │   └── verify-otp/       # Verificación 2FA
-│   ├── (dashboard)/
-│   │   ├── dashboard/        # Home del dashboard
-│   │   ├── transferir/       # Flujo de transferencias
-│   │   ├── contactos/        # Gestión de agenda
-│   │   ├── movimientos/      # Historial
-│   │   ├── notificaciones/   # Centro de notificaciones
-│   │   └── seguridad/        # Panel de seguridad
-│   ├── layout.tsx
-│   └── page.tsx
-├── components/
-│   ├── ui/                   # shadcn/ui components
-│   ├── dashboard/            # Componentes específicos
-│   └── shared/               # Componentes reutilizables
-├── lib/
-│   ├── api.ts                # Cliente API
-│   ├── auth.ts               # Helpers de autenticación
-│   └── utils.ts              # Utilidades
-├── middleware.ts             # Protección de rutas
-├── tailwind.config.ts
+├── public/
+├── src/
+│   ├── app/
+│   │   ├── (auth)/              # Rutas de autenticación
+│   │   │   ├── login/
+│   │   │   └── verify-otp/
+│   │   ├── (dashboard)/         # Rutas protegidas
+│   │   │   ├── dashboard/       # Vista principal
+│   │   │   ├── transfers/       # Transferencias
+│   │   │   ├── contacts/        # Gestión de contactos
+│   │   │   ├── accounts/        # Cuentas bancarias
+│   │   │   ├── notifications/   # Notificaciones
+│   │   │   └── profile/         # Perfil y seguridad
+│   │   ├── layout.tsx           # Layout principal
+│   │   └── page.tsx             # Redirige a /login
+│   ├── components/
+│   │   ├── dashboard/           # Componentes del dashboard
+│   │   └── ui/                  # Componentes reutilizables
+│   ├── services/                # Servicios API
+│   │   ├── api.ts               # Axios config
+│   │   ├── auth.ts
+│   │   ├── accounts.ts
+│   │   ├── contacts.ts
+│   │   ├── transfers.ts
+│   │   └── notifications.ts
+│   ├── store/                   # Zustand stores
+│   │   └── dashboardStore.ts    # Estado global del dashboard
+│   ├── types/                   # TypeScript types
+│   └── utils/                   # Utilidades
+│       ├── rutValidator.ts
+│       └── formatters.ts
+├── .env.local                   # Variables de entorno (no subir)
+├── .env.local.example           # Template de variables
 ├── next.config.js
+├── tailwind.config.ts
 └── package.json
 ```
 
 ---
 
-## 🚀 Tecnologías
+## 🎨 Características
 
-| Categoría | Tecnología | Versión | Propósito |
-|-----------|-----------|---------|-----------|
-| **Framework** | Next.js | 14.x | React framework con App Router |
-| **Lenguaje** | TypeScript | 5.3 | Tipado estático |
-| **UI Library** | React | 18.x | Biblioteca de componentes |
-| **Estilos** | Tailwind CSS | 3.4 | Utility-first CSS |
-| **Componentes** | shadcn/ui | Latest | Componentes accesibles |
-| **Formularios** | React Hook Form | 7.x | Gestión de formularios |
-| **Validación** | Zod | 3.x | Schema validation |
-| **Gráficos** | Recharts | 2.x | Visualización de datos |
-| **Data fetching** | SWR | 2.x | Cache y revalidación |
-| **Iconos** | Lucide React | Latest | Iconos modernos |
+### Autenticación
+- ✅ Login con email o RUT
+- ✅ Autenticación 2FA con códigos OTP
+- ✅ Tokens JWT almacenados en localStorage
+- ✅ Validación automática de sesión
+- ✅ Logout con limpieza de estado
+
+### Dashboard Principal
+- ✅ Vista de cuentas con saldos
+- ✅ Indicadores económicos (UF, USD, EUR)
+- ✅ Transacciones recientes
+- ✅ Notificaciones en tiempo real
+
+### Transferencias
+- ✅ Flujo en 3 pasos (origen → destino/monto → confirmación)
+- ✅ Transferencias a contactos guardados
+- ✅ Transferencias a cuentas nuevas (con validación RUT)
+- ✅ Validación de saldo en tiempo real
+- ✅ Comprobante descargable en PDF
+
+### Gestión de Contactos
+- ✅ CRUD completo de contactos
+- ✅ Validación de RUT chileno
+- ✅ Búsqueda y filtrado
+- ✅ Favoritos (opcional)
+
+### Notificaciones
+- ✅ Centro de notificaciones
+- ✅ Marcar como leídas
+- ✅ Filtrado por tipo
+- ✅ Toast notifications
+
+### Perfil y Seguridad
+- ✅ Actualizar información personal
+- ✅ Cambio de contraseña
+- ✅ Habilitar/deshabilitar 2FA
+- ✅ Visualizar último login
 
 ---
 
-## 📦 Instalación y Setup
+## 🔐 Sistema de Caché (Zustand)
 
-### Prerrequisitos
-
-- **Node.js 18+** ([Descargar](https://nodejs.org/))
-- **npm 9+** o **pnpm 8+**
-- Backend corriendo en `http://localhost:8080`
-
-### 1. Clonar el repositorio
-
-```bash
-git clone https://github.com/omarpg/front-dashboard.git
-cd front-dashboard
+El dashboard utiliza **Zustand** para gestionar estado global y optimizar las peticiones al backend:
+```typescript
+// dashboardStore.ts
+const useDashboardStore = create((set) => ({
+  accounts: [],
+  transactions: [],
+  contacts: [],
+  accountsLoaded: false,
+  
+  loadAccounts: async () => {
+    if (!accountsLoaded) {
+      const accounts = await accountsService.getAccounts();
+      set({ accounts, accountsLoaded: true });
+    }
+  },
+  
+  clearCache: () => set({ accounts: [], accountsLoaded: false }),
+}));
 ```
 
-### 2. Instalar dependencias
+**Ventajas:**
+- ⚡ Reduce llamadas redundantes al backend
+- 🔄 Actualización reactiva en todos los componentes
+- 🧹 Limpieza automática al logout
 
-```bash
-npm install
-# o
-pnpm install
-```
+---
 
-### 3. Configurar variables de entorno
+## ⚙️ Configuración
 
-Crea un archivo `.env.local`:
+### Variables de Entorno
 
-```bash
-# URL del backend
+Crear archivo `.env.local`:
+```env
 NEXT_PUBLIC_API_URL=http://localhost:8080/api
-
-# Configuración JWT
-JWT_SECRET=tu_secret_key_aqui
 ```
 
-### 4. Ejecutar en desarrollo
+---
 
+## 🚀 Ejecución
+
+### Desarrollo
 ```bash
+# Instalar dependencias
+npm install
+
+# Iniciar servidor de desarrollo
 npm run dev
-# o
-pnpm dev
 ```
 
-La aplicación estará disponible en: **http://localhost:3000**
+Dashboard disponible en: `http://localhost:3000`
 
-### 5. Build para producción
-
+### Producción
 ```bash
+# Build
 npm run build
-npm run start
+
+# Iniciar
+npm start
+```
+
+### Linting
+```bash
+# Verificar código
+npm run lint
+
+# Fix automático
+npm run lint -- --fix
 ```
 
 ---
 
-## 🎨 Rutas de la aplicación
+## 🎨 Diseño y UX
 
-### Públicas (sin autenticación)
+### Paleta de Colores
 
-| Ruta | Descripción |
-|------|-------------|
-| `/login` | Formulario de login (RUT/email + password) |
-| `/verify-otp` | Verificación de código 2FA |
+- **Primary:** Azul (`#3B82F6`)
+- **Success:** Verde (`#10B981`)
+- **Warning:** Amarillo (`#F59E0B`)
+- **Error:** Rojo (`#EF4444`)
+- **Background:** Gris claro (`#F9FAFB`)
 
-### Privadas (requieren autenticación)
+### Responsive Design
 
-| Ruta | Descripción |
-|------|-------------|
-| `/dashboard` | Home: posición consolidada + gráficos |
-| `/transferir` | Flujo completo de transferencias TEF |
-| `/contactos` | CRUD de agenda de destinatarios |
-| `/movimientos` | Historial de transacciones con filtros |
-| `/notificaciones` | Centro de notificaciones |
-| `/seguridad` | Panel de seguridad de la cuenta |
+- ✅ Mobile First
+- ✅ Breakpoints Tailwind: `sm`, `md`, `lg`, `xl`, `2xl`
+- ✅ Navegación adaptativa (sidebar → bottom nav en móvil)
+
+### Accesibilidad
+
+- ✅ ARIA labels en botones e inputs
+- ✅ Focus visible
+- ✅ Contraste WCAG AA
+- ✅ Navegación por teclado
 
 ---
 
-## 🔒 Flujo de Autenticación
-
-### Login + 2FA
-
+## 🔄 Flujo de Autenticación
 ```
-1. Usuario ingresa RUT/email + password
+1. Usuario ingresa email/RUT + contraseña
    ↓
 2. POST /api/auth/login
    ↓
-3. ¿Tiene 2FA habilitado?
-   → SÍ: Redirigir a /verify-otp
-   → NO: Guardar JWT y redirigir a /dashboard
-   ↓
-4. Usuario ingresa código de 6 dígitos
-   ↓
-5. POST /api/auth/verify-otp
-   ↓
-6. JWT final guardado en httpOnly cookie
-   ↓
-7. Redirigir a /dashboard
+3a. Si 2FA deshabilitado:
+    - Recibe JWT token
+    - Almacena en localStorage
+    - Redirige a /dashboard
+   
+3b. Si 2FA habilitado:
+    - Recibe requireOtp: true
+    - Redirige a /verify-otp
+    - Usuario ingresa código OTP
+    - POST /api/auth/verify-otp
+    - Recibe JWT token
+    - Redirige a /dashboard
 ```
 
-### Protección de rutas
+Ver diagrama completo en: [`/docs/architecture/auth-flow.md`](../docs/architecture/auth-flow.md)
 
-El archivo `middleware.ts` intercepta todas las requests a rutas privadas:
+---
 
-```typescript
-export function middleware(request: NextRequest) {
-  const token = request.cookies.get('token');
-  
-  if (!token && isPrivateRoute(request.nextUrl.pathname)) {
-    return NextResponse.redirect(new URL('/login', request.url));
-  }
-  
-  return NextResponse.next();
+## 🧪 Testing
+```bash
+# Ejecutar tests (cuando se implementen)
+npm test
+
+# Coverage
+npm run test:coverage
+```
+
+---
+
+## 📦 Dependencias Principales
+```json
+{
+  "next": "^15.1.0",
+  "react": "^19.0.0",
+  "zustand": "^5.0.2",
+  "axios": "^1.7.9",
+  "react-hot-toast": "^2.4.1",
+  "tailwindcss": "^3.4.1",
+  "lucide-react": "^0.468.0"
 }
 ```
 
 ---
 
-## 📱 Características principales
+## 📝 Notas
 
-### Dashboard (Posición Consolidada)
-
-- Card de saldo total en CLP
-- Equivalente en UF (actualizado con tasas de `mindicador.cl`)
-- Gráfico de barras con gastos mensuales (Recharts)
-- Últimas 5 transacciones en tabla
-- Actualización automática cada 30 segundos (SWR)
-
-### Transferencias (TEF)
-
-**Paso 1:** Selección
-- Cuenta origen (select)
-- Destinatario desde agenda (select con búsqueda)
-- Monto (validación de saldo en frontend)
-- Glosa/mensaje
-
-**Paso 2:** Confirmación
-- Resumen de la operación
-- Botón "Confirmar"
-
-**Paso 3:** OTP
-- Modal con 6 inputs para código
-- Timer de 5 minutos
-- Opción "Reenviar código"
-
-**Paso 4:** Resultado
-- Comprobante descargable en PDF
-- Opción "Nueva transferencia"
-
-### Contactos (Agenda)
-
-- Tabla con búsqueda en tiempo real
-- Modal para agregar/editar contacto
-- Validación de RUT con Módulo 11
-- Confirmación antes de eliminar
-
-### Notificaciones
-
-- Dropdown desde icono campana en header
-- Badge con contador de no leídas
-- Click en notificación: marca como leída
-- Si tiene transacción relacionada: navega al detalle
+- El dashboard asume que el backend está corriendo en `http://localhost:8080`
+- Los tokens JWT expiran en 24 horas
+- El estado del dashboard se limpia automáticamente al logout
+- Las notificaciones toast desaparecen después de 3 segundos
 
 ---
 
-## 🎨 Sistema de diseño
+## 📚 Documentación Adicional
 
-### Paleta de colores
-
-```css
-/* Tailwind custom colors */
---primary: 222.2 47.4% 11.2%;
---secondary: 210 40% 96.1%;
---accent: 210 40% 96.1%;
---destructive: 0 84.2% 60.2%;
---border: 214.3 31.8% 91.4%;
---input: 214.3 31.8% 91.4%;
---ring: 222.2 84% 4.9%;
-```
-
-### Componentes shadcn/ui utilizados
-
-- `Button`, `Input`, `Label`
-- `Dialog`, `Sheet`, `Popover`
-- `Table`, `Card`, `Badge`
-- `Select`, `Form`, `Toast`
-- `Dropdown Menu`, `Avatar`
-- `Skeleton`
+- [Arquitectura del Sistema](../docs/architecture/system-overview.md)
+- [Flujo de Transferencias](../docs/architecture/transfer-flow.md)
+- [README Principal](../README.md)
 
 ---
 
-## 🧪 Testing
-
-```bash
-# Tests unitarios (Vitest)
-npm run test
-
-# Tests E2E (Playwright)
-npm run test:e2e
-```
-
----
-
-## 🚢 Deployment
-
-### Deploy en Vercel (recomendado)
-
-1. Push a GitHub
-2. Conectar repositorio en [Vercel](https://vercel.com)
-3. Configurar variables de entorno:
-   - `NEXT_PUBLIC_API_URL`: URL del backend en producción
-4. Deploy automático
-
-### Variables de entorno en producción
-
-```bash
-NEXT_PUBLIC_API_URL=https://tu-backend.railway.app/api
-JWT_SECRET=clave_secreta_produccion
-```
-
----
-
-## 🎯 Decisiones de diseño
-
-### ¿Por qué Next.js 14 con App Router?
-
-El App Router es la arquitectura actual de Next.js, con mejor performance (React Server Components) y DX mejorada. Las empresas están migrando de Pages Router a App Router.
-
-### ¿Por qué shadcn/ui y no otras uis?
-
-shadcn/ui da control total del código (copia componentes al proyecto), es más ligero, y permite personalización completa sin wrappers. Además, es la tendencia actual de los últimos años.
-
-### ¿Por qué SWR para data fetching?
-
-SWR maneja cache, revalidación y estados de loading/error automáticamente. Reduce boilerplate comparado con useEffect + fetch manual.
-
----
-
-## 🔗 Repositorios Relacionados
-
-- [Backend (Spring Boot)](https://github.com/omarpg/backend) — API REST
-- [Portal Público (Astro)](https://github.com/omarpg/front-portal) — Landing page
-
----
-
-**Desarrollado con ⚛️ y Next.js**
+Desarrollado con ⚛️ y Next.js

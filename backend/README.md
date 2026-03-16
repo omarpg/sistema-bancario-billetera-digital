@@ -1,249 +1,261 @@
-# 💼 Billetera Digital — Backend
+# 🔧 Backend - Billetera Digital
 
-> Sistema de Gestión de Billetera Digital orientado al sector bancario. Backend construído con Spring Boot 3.5, Java 17 y PostgreSQL.
-
-[![Java](https://img.shields.io/badge/Java-17-orange?logo=oracle)](https://www.oracle.com/java/)
-[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.5.10-brightgreen?logo=spring)](https://spring.io/projects/spring-boot)
-[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-17.6-blue?logo=postgresql)](https://www.postgresql.org/)
-[![Maven](https://img.shields.io/badge/Maven-3.9+-red?logo=apache-maven)](https://maven.apache.org/)
+API REST desarrollada con **Spring Boot 3.5** que proporciona servicios de autenticación, gestión de cuentas bancarias, transferencias y notificaciones.
 
 ---
 
-## 📋 Descripción
+## 🚀 Stack Tecnológico
 
-Backend API REST para una billetera digital que simula las funcionalidades core de un sistema bancario:
-
-- ✅ Autenticación con JWT + 2FA (OTP)
-- ✅ Gestión de cuentas bancarias (CLP, USD, UF)
-- ✅ Transferencias electrónicas (TEF) con validación de saldo
-- ✅ Agenda de contactos con validación de RUT (Módulo 11)
-- ✅ Historial de transacciones con filtros avanzados
-- ✅ Centro de notificaciones en tiempo real
-- ✅ Integración con API mindicador.cl para tasas de cambio
-- ✅ Auditoría completa de eventos de seguridad
-
-Este proyecto fue desarrollado como portafolio técnico para mostrar capacidades en desarrollo backend con tecnologías utilizadas en el sector financiero.
+- **Java 17**
+- **Spring Boot 3.5.10**
+- **Spring Security 6.x** (JWT + 2FA con OTP)
+- **Spring Data JPA** (Hibernate)
+- **PostgreSQL 16**
+- **Maven 3.8+**
+- **Lombok**
+- **BCrypt** (hash de contraseñas)
 
 ---
 
-## 🏗️ Arquitectura
-
-### Capas de la aplicación
-
-```
-┌─────────────────────────────────────────┐
-│         Controllers (API REST)          │
-│   Endpoints: /api/auth, /api/accounts   │
-│   /api/transfers, /api/notifications    │
-└──────────────────┬──────────────────────┘
-                   │
-┌──────────────────▼──────────────────────┐
-│            Services (Lógica)            │
-│  UserService, TransactionService, etc.  │
-└──────────────────┬──────────────────────┘
-                   │
-┌──────────────────▼──────────────────────┐
-│     Repositories (Spring Data JPA)      │
-│   UserRepository, AccountRepository     │
-└──────────────────┬──────────────────────┘
-                   │
-┌──────────────────▼──────────────────────┐
-│      Base de Datos (PostgreSQL)         │
-│        Supabase — 8 tablas              │
-└─────────────────────────────────────────┘
-```
-
-### Estructura del proyecto
-
+## 📁 Estructura del Proyecto
 ```
 backend/
-├── src/main/java/com/billetera/backend/
-│   ├── controller/       # REST Controllers (@RestController)
-│   ├── service/          # Lógica de negocio (@Service)
-│   ├── repository/       # Spring Data JPA (@Repository)
-│   ├── entity/           # Entidades JPA (@Entity)
-│   ├── dto/              # Data Transfer Objects (Request/Response)
-│   ├── config/           # Configuración (Security, CORS, JWT)
-│   ├── exception/        # Manejo de errores personalizados
-│   ├── util/             # Utilidades (validación RUT, generación OTP)
-│   └── BackendApplication.java
-├── src/main/resources/
-│   ├── application.properties
-│   └── application-prod.properties
-├── pom.xml
-└── README.md
+├── database/
+│   ├── schema-docker.sql        # Script para PostgreSQL local (Docker)
+│   └── schema-supabase.sql      # Script para Supabase
+├── src/
+│   ├── main/
+│   │   ├── java/com/billetera/backend/
+│   │   │   ├── config/          # Configuraciones (Security, CORS, JWT)
+│   │   │   ├── controller/      # REST Controllers
+│   │   │   ├── dto/             # Data Transfer Objects
+│   │   │   ├── entity/          # Entidades JPA (Users, Accounts, etc.)
+│   │   │   ├── exception/       # Manejo de excepciones
+│   │   │   ├── repository/      # Repositorios JPA
+│   │   │   ├── service/         # Lógica de negocio
+│   │   │   └── util/            # Utilidades (JWT, RUT validator)
+│   │   └── resources/
+│   │       └── application.properties
+│   └── test/
+├── Dockerfile
+├── .dockerignore
+└── pom.xml
 ```
 
 ---
 
-## 🚀 Tecnologías
+## 🗄️ Modelo de Datos
 
-| Categoría              | Tecnología          | Versión | Propósito                       |
-|------------------------|---------------------|---------|---------------------------------|
-| **Lenguaje**           | Java                | 17 LTS  | Base del proyecto               |
-| **Framework**          | Spring Boot         | 3.5.10  | Framework web + DI              |
-| **ORM**                | Hibernate (JPA)     | 6.6.x   | Mapeo objeto-relacional         |
-| **Seguridad**          | Spring Security     | 6.x     | Autenticación y autorización    |
-| **Base de datos**      | PostgreSQL          | 17.6    | BD relacional (Supabase)        |
-| **Tokens**             | JJWT                | 0.12.x  | Generación y validación JWT     |
-| **Pool de conexiones** | HikariCP            | 6.x     | Gestión eficiente de conexiones |
-| **Validación**         | Hibernate Validator | 8.x     | Validación de DTOs              |
-| **Utilidades**         | Lombok              | 1.18.x  | Reducción de boilerplate        |
-| **Testing**            | JUnit 5 + Mockito   | 5.x     | Pruebas unitarias               |
-| **Build**              | Maven               | 3.9+    | Gestión de dependencias         |
+### Entidades Principales
+
+- **Users** - Usuarios del sistema
+- **Accounts** - Cuentas bancarias (Vista, Corriente, Ahorro)
+- **Contacts** - Contactos para transferencias
+- **Transactions** - Historial de transacciones
+- **OtpCodes** - Códigos 2FA temporales
+- **Notifications** - Notificaciones del sistema
+- **CurrencyRates** - Indicadores económicos (UF, USD, EUR)
+- **AuditLogs** - Registro de auditoría
+
+### Relaciones
+```
+Users (1) ──── (N) Accounts
+Users (1) ──── (N) Contacts
+Users (1) ──── (N) OtpCodes
+Users (1) ──── (N) Notifications
+Users (1) ──── (N) AuditLogs
+Accounts (1) ── (N) Transactions (source)
+Accounts (1) ── (N) Transactions (destination)
+Transactions (1) ── (N) Notifications
+```
+
+Ver diagrama completo en: [`/docs/architecture/database-schema.md`](../docs/architecture/database-schema.md)
 
 ---
 
-## 📦 Instalación y Setup
-
-### Prerrequisitos
-
-- **Java 17** ([Oracle JDK](https://www.oracle.com/java/technologies/downloads/) o [OpenJDK](https://openjdk.org/))
-- **Maven 3.9+** (incluido en IntelliJ IDEA)
-- **PostgreSQL 15+** (o cuenta en [Supabase](https://supabase.com))
-- **IntelliJ IDEA** (recomendado y utilizado en este proyecto) o cualquier IDE con soporte Java
-
-### 1. Clonar el repositorio
-
-```bash
-git clone https://github.com/omarpg/backend.git
-cd backend
-```
-
-### 2. Configurar base de datos
-
-Crea un archivo `application-local.properties` en `src/main/resources/`:
-
-```properties
-# Database (Supabase o PostgreSQL local)
-spring.datasource.url=jdbc:postgresql://TU-HOST:5432/postgres
-spring.datasource.username=postgres
-spring.datasource.password=TU_PASSWORD
-
-# JWT Secret (generar uno propio)
-jwt.secret=TU_SECRET_KEY_AQUI
-jwt.expiration=86400000
-```
-
-**Importante:** Nunca subir este archivo a Git. Ya está incluido en `.gitignore`.
-
-### 3. Instalar dependencias
-
-```bash
-mvn clean install
-```
-
-### 4. Ejecutar la aplicación
-
-**Desde terminal:**
-```bash
-mvn spring-boot:run
-```
-
-**Desde IntelliJ:**
-- Abre `BackendApplication.java`
-- Click en el botón verde ▶️ "Run"
-
-La aplicación estará disponible en: **http://localhost:8080**
-
-### 5. Verificar que funciona
-
-```bash
-curl http://localhost:8080/api/health
-```
-
-Respuesta esperada:
-```json
-{
-  "status": "UP",
-  "message": "Backend is running! Database connection OK.",
-  "timestamp": "2026-02-06T10:30:00",
-  "database": "Supabase PostgreSQL 17.6"
-}
-```
-
----
-
-## 📚 API Endpoints
+## 🔐 Seguridad
 
 ### Autenticación
 
-| Método | Endpoint               | Descripción               | Auth    |
-|--------|------------------------|---------------------------|---------|
-| POST   | `/api/auth/register`   | Registro de nuevo usuario | No      |
-| POST   | `/api/auth/login`      | Login (retorna JWT)       | No      |
-| POST   | `/api/auth/verify-otp` | Validar código 2FA        | Parcial |
+- **JWT** (JSON Web Tokens) con expiración de 24 horas
+- **2FA** opcional con códigos OTP de 6 dígitos (válidos por 5 minutos)
+- **BCrypt** para hash de contraseñas (strength 10)
+
+### Autorización
+
+- Endpoints públicos: `/api/auth/**`
+- Endpoints protegidos: Requieren `Authorization: Bearer <token>`
+- Validación de permisos por usuario (solo accede a sus propios datos)
+
+### Validaciones
+
+- **RUT chileno** con dígito verificador
+- **Saldo suficiente** antes de transferencias
+- **Límites de transferencia** configurables
+- **Protección CSRF** deshabilitada (API stateless)
+- **CORS** configurado para frontends locales
+
+---
+
+## 📡 API Endpoints
+
+### Autenticación
+
+| Método | Endpoint               | Descripción                         |
+| ------ | ---------------------- | ----------------------------------- |
+| POST   | `/api/auth/register`   | Registrar nuevo usuario             |
+| POST   | `/api/auth/login`      | Login (devuelve JWT o requiere OTP) |
+| POST   | `/api/auth/verify-otp` | Verificar código 2FA                |
 
 ### Cuentas
 
-| Método | Endpoint             | Descripción                  | Auth |
-|--------|----------------------|------------------------------|------|
-| GET    | `/api/accounts`      | Listar cuentas del usuario   | Sí   |
-| GET    | `/api/accounts/{id}` | Detalle de cuenta específica | Sí   |
+| Método | Endpoint             | Descripción                |
+| ------ | -------------------- | -------------------------- |
+| GET    | `/api/accounts`      | Listar cuentas del usuario |
+| GET    | `/api/accounts/{id}` | Detalle de cuenta          |
+| POST   | `/api/accounts`      | Crear nueva cuenta         |
 
 ### Transferencias
 
-| Método | Endpoint                      | Descripción                        | Auth |
-|--------|-------------------------------|------------------------------------|------|
-| POST   | `/api/transfers/initiate`     | Iniciar transferencia (genera OTP) | Sí   |
-| POST   | `/api/transfers/confirm`      | Confirmar con OTP y ejecutar       | Sí   |
-| GET    | `/api/transfers/{id}/receipt` | Descargar comprobante PDF          | Sí   |
+| Método | Endpoint              | Descripción                 |
+| ------ | --------------------- | --------------------------- |
+| POST   | `/api/transfers`      | Realizar transferencia      |
+| GET    | `/api/transfers`      | Historial de transferencias |
+| GET    | `/api/transfers/{id}` | Detalle de transferencia    |
 
 ### Contactos
 
-| Método | Endpoint             | Descripción       | Auth |
-|--------|----------------------|-------------------|------|
-| GET    | `/api/contacts`      | Listar agenda     | Sí   |
-| POST   | `/api/contacts`      | Agregar contacto  | Sí   |
-| PUT    | `/api/contacts/{id}` | Editar contacto   | Sí   |
-| DELETE | `/api/contacts/{id}` | Eliminar contacto | Sí   |
+| Método | Endpoint             | Descripción         |
+| ------ | -------------------- | ------------------- |
+| GET    | `/api/contacts`      | Listar contactos    |
+| POST   | `/api/contacts`      | Crear contacto      |
+| PUT    | `/api/contacts/{id}` | Actualizar contacto |
+| DELETE | `/api/contacts/{id}` | Eliminar contacto   |
 
-### Dashboard
+### Notificaciones
 
-| Método | Endpoint                 | Descripción                     | Auth |
-|--------|--------------------------|---------------------------------|------|
-| GET    | `/api/dashboard/summary` | Posición consolidada + gráficos | Sí   |
+| Método | Endpoint                       | Descripción           |
+| ------ | ------------------------------ | --------------------- |
+| GET    | `/api/notifications`           | Listar notificaciones |
+| PATCH  | `/api/notifications/{id}/read` | Marcar como leída     |
 
-**Auth:** Indica si requiere token JWT en header `Authorization: Bearer {token}`
+### Indicadores Económicos
 
----
+| Método | Endpoint              | Descripción          |
+| ------ | --------------------- | -------------------- |
+| GET    | `/api/currency-rates` | Obtener UF, USD, EUR |
 
-## 🔒 Seguridad
-
-### Autenticación JWT + 2FA
-
-1. Usuario hace login → Backend valida credenciales
-2. Si tiene 2FA habilitado → Genera OTP de 6 dígitos
-3. Usuario ingresa OTP → Backend valida y genera JWT final
-4. Todas las requests posteriores incluyen JWT en header
-
-### Validaciones implementadas
-
-- ✅ RUT chileno validado con algoritmo Módulo 11
-- ✅ Passwords hasheadas con BCrypt (factor 12)
-- ✅ Validación de saldo antes de transferencias
-- ✅ OTP expira después de 5 minutos
-- ✅ OTP de un solo uso (flag `is_used`)
+Ver documentación completa en: [`/docs/architecture/backend-layers.md`](../docs/architecture/backend-layers.md)
 
 ---
 
-## 🎯 Decisiones Técnicas
+## ⚙️ Configuración
 
-### ¿Por qué Java 17 y no Java 21?
+### Variables de Entorno (Docker)
 
-Java 17 es LTS y es la versión más adoptada en el sector bancario, sin considerar las versiones legacy más antiguas.
+Sobrescritas automáticamente por `docker-compose.yml`:
+```yaml
+SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/billetera_digital
+SPRING_DATASOURCE_USERNAME=postgres
+SPRING_DATASOURCE_PASSWORD=postgres
+JWT_SECRET=clave-super-secreta-docker...
+```
 
-### ¿Por qué NUMERIC en lugar de FLOAT para montos?
+### Configuración Manual (Supabase)
 
-En aplicaciones financieras, usar tipos FLOAT causa errores de redondeo. NUMERIC es exacto.
+Editar `src/main/resources/application.properties`:
+```properties
+# ⚠️ Reemplazar con credenciales de Supabase
+spring.datasource.url=jdbc:postgresql://db.xxxxx.supabase.co:5432/postgres
+spring.datasource.username=postgres
+spring.datasource.password=TU_PASSWORD_SUPABASE
+```
 
 ---
 
-## 🔗 Repositorios Relacionados
+## 🚀 Ejecución
 
-- [Frontend Dashboard (Next.js)](https://github.com/omarpg/front-dashboard) — Aplicación web para clientes autenticados
-- [Frontend Portal (Astro)](https://github.com/omarpg/front-portal) — Sitio público institucional
+### Con Docker (Recomendado)
+```bash
+# Desde la raíz del proyecto
+docker-compose up
+```
+
+Backend disponible en: `http://localhost:8080`
 
 ---
 
-**Desarrollado con ☕ y Spring Boot**
+### Con Maven (Supabase)
+```bash
+# Ejecutar base de datos en Supabase
+# Ver: /database/schema-supabase.sql
+
+# Instalar dependencias y ejecutar
+mvn spring-boot:run
+```
+
+Backend disponible en: `http://localhost:8080`
+
+---
+
+## 🧪 Testing
+```bash
+# Ejecutar tests unitarios
+mvn test
+
+# Ejecutar con cobertura
+mvn test jacoco:report
+
+# Ver reporte en:
+# target/site/jacoco/index.html
+```
+
+---
+
+## 🗂️ Base de Datos
+
+### Inicializar con Docker
+```bash
+docker-compose up postgres
+# Se ejecuta automáticamente: database/schema-docker.sql
+```
+
+### Inicializar con Supabase
+
+1. Ir a Supabase → SQL Editor
+2. Ejecutar contenido de: `database/schema-supabase.sql`
+
+---
+
+## 📊 Jobs Programados
+
+- **CurrencyRateJob**: Actualiza UF, USD, EUR desde mindicador.cl cada 6 horas
+
+---
+
+## 🔧 Herramientas de Desarrollo
+
+- **Lombok**: Reduce boilerplate (getters, setters, builders)
+- **Spring DevTools**: Hot reload en desarrollo
+- **H2 Console**: Base de datos en memoria para tests (opcional)
+
+---
+
+## 📝 Notas
+
+- Las fechas `created_at` son manejadas automáticamente por JPA (`@PrePersist`)
+- Los ENUMs de PostgreSQL están mapeados como `@Enumerated(EnumType.STRING)`
+- El `operation_number` de transacciones usa secuencia autoincrementable
+
+---
+
+## 📚 Documentación Adicional
+
+- [Arquitectura del Sistema](../docs/architecture/system-overview.md)
+- [Flujo de Autenticación](../docs/architecture/auth-flow.md)
+- [Flujo de Transferencias](../docs/architecture/transfer-flow.md)
+- [Schema de Base de Datos](../docs/architecture/database-schema.md)
+
+---
+
+Desarrollado con ☕ y Spring Boot

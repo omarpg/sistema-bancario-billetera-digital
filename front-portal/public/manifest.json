@@ -1,7 +1,7 @@
 {
   "name": "Billetera Digital",
   "short_name": "Billetera",
-  "description": "Tu banca online segura y simple",
+  "description": "Sistema bancario digital para la gestión de cuentas, transacciones y servicios financieros.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",

@@ -510,4 +510,4 @@ Este proyecto está bajo la Licencia MIT. Ver archivo `LICENSE` para más detall
 
 ---
 
-**⭐ Proyecto sin fines de lucro**
+**⭐ Proyecto con orientación educativa**

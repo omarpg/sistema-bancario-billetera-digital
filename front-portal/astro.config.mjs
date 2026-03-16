@@ -9,10 +9,13 @@ import sitemap from '@astrojs/sitemap';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://billetera-digital-page.com', // Cambiar por dominio en producción
+  site: 'http://localhost:4321/', // Cambiar por dominio real
   vite: {
     plugins: [tailwindcss()]
   },
   integrations: [react(), sitemap()],
   output: 'static',
+  build: {
+    inlineStylesheets: 'always'
+  },
 });
