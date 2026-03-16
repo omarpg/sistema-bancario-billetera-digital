@@ -354,6 +354,7 @@ sistema-bancario-billetera-digital/
 │   └── README.md
 │
 ├── front-dashboard/
+│   ├── public/
 │   ├── src/
 │   │   ├── app/
 │   │   │   ├── (auth)/         # Rutas de autenticación
@@ -368,21 +369,22 @@ sistema-bancario-billetera-digital/
 │   │   ├── store/              # Zustand stores
 │   │   ├── types/              # TypeScript types
 │   │   └── styles/
-│   ├── public/
 │   ├── package.json
 │   └── README.md
 │
 ├── front-portal/
+│   ├── public/
+│   │   ├── fonts/
+│   │   └── lighthouse-desktop/
 │   ├── src/
-│   │   ├── assets/           # Svgs, logos, etc
 │   │   ├── components/       # Componentes generales
 │   │   ├── layouts/          # Layout general
 │   │   ├── pages/            # Páginas principales enrutadas
 │   │   ├── styles/           # Estilos globales
 │   │   └── utils/            # Data y tipos
 │   │       └── types/        
-│   ├── public/
-│   └── package.json
+│   ├── package.json
+│   └── README.md
 │
 ├── LICENSE
 └── README.md
@@ -507,6 +509,7 @@ Este proyecto está bajo la Licencia MIT. Ver archivo `LICENSE` para más detall
 - [Tailwind CSS](https://tailwindcss.com/) - Framework CSS
 - [Supabase](https://supabase.com/) - PostgreSQL hosting
 - [Mindicador.cl](https://mindicador.cl/) - API de indicadores económicos
+- [Docker](https://www.docker.com/) - Plataforma de contenedores
 
 ---
 

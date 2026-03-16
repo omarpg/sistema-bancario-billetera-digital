@@ -106,7 +106,7 @@ front-portal/
 
 ### Performance
 
-- ✅ **Lighthouse Desktop Score: 100/100** en todas las páginas. [Ver Imágenes](../public/lighthouse-desktop)
+- ✅ **Lighthouse Desktop Score: 100/100** en todas las páginas. [Ver Imágenes](./public/lighthouse-desktop/)
   - Performance: 100
   - Accessibility: 100
   - Best Practices: 100
