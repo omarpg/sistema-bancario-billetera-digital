@@ -9,6 +9,7 @@ Sitio web institucional desarrollado con **Astro 5** que presenta servicios, con
 - **Astro 5.1**
 - **TypeScript**
 - **Tailwind CSS 3.4**
+- **React 19**
 - **Fetch API** (HTTP client)
 - **Integración con mindicador.cl** (indicadores económicos)
 
@@ -194,7 +195,6 @@ El portal consume la API pública de **mindicador.cl** para mostrar:
     - Usuario creado
     - Cuenta Vista automática
     - Redirige a Dashboard con token JWT para login
-   
 3b. Error:
     - Muestra mensaje de error
     - RUT duplicado

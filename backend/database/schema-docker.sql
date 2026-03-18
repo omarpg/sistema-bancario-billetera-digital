@@ -33,11 +33,11 @@ DROP SEQUENCE IF EXISTS transactions_operation_number_seq CASCADE;
 -- =============================================
 
 CREATE TYPE account_type AS ENUM ('VISTA', 'CORRIENTE', 'AHORRO');
-CREATE TYPE account_status AS ENUM ('ACTIVE', 'INACTIVE', 'BLOCKED');
-CREATE TYPE transaction_type AS ENUM ('TRANSFER', 'DEPOSIT', 'WITHDRAWAL');
+CREATE TYPE account_status AS ENUM ('ACTIVE', 'CLOSED', 'BLOCKED');
+CREATE TYPE transaction_type AS ENUM ('TRANSFER', 'DEPOSIT', 'WITHDRAWAL', 'FEE');
 CREATE TYPE transaction_status AS ENUM ('PENDING', 'CONFIRMED', 'COMPLETED', 'FAILED');
-CREATE TYPE notification_type AS ENUM ('TRANSFER', 'SECURITY', 'SYSTEM', 'GENERAL');
-CREATE TYPE otp_purpose AS ENUM ('LOGIN', 'TRANSFER', 'PASSWORD_RESET', 'ACCOUNT_VERIFICATION');
+CREATE TYPE notification_type AS ENUM ('TRANSFER_SENT', 'TRANSFER_RECEIVED', 'LOGIN_NEW_DEVICE', 'PASSWORD_CHANGED', 'SYSTEM');
+CREATE TYPE otp_purpose AS ENUM ('LOGIN_2FA', 'TRANSFER_CONFIRM', 'PASSWORD_RESET');
 
 -- =============================================
 -- CREAR SECUENCIAS

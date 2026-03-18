@@ -17,13 +17,13 @@ EXCEPTION
 END $$;
 
 DO $$ BEGIN
-    CREATE TYPE account_status AS ENUM ('ACTIVE', 'INACTIVE', 'BLOCKED');
+    CREATE TYPE account_status AS ENUM ('ACTIVE', 'CLOSED', 'BLOCKED');
 EXCEPTION
     WHEN duplicate_object THEN null;
 END $$;
 
 DO $$ BEGIN
-    CREATE TYPE transaction_type AS ENUM ('TRANSFER', 'DEPOSIT', 'WITHDRAWAL');
+    CREATE TYPE transaction_type AS ENUM ('TRANSFER', 'DEPOSIT', 'WITHDRAWAL', 'FEE');
 EXCEPTION
     WHEN duplicate_object THEN null;
 END $$;
@@ -35,13 +35,13 @@ EXCEPTION
 END $$;
 
 DO $$ BEGIN
-    CREATE TYPE notification_type AS ENUM ('TRANSFER', 'SECURITY', 'SYSTEM', 'GENERAL');
+    CREATE TYPE notification_type AS ENUM ('TRANSFER_SENT', 'TRANSFER_RECEIVED', 'LOGIN_NEW_DEVICE', 'PASSWORD_CHANGED', 'SYSTEM');
 EXCEPTION
     WHEN duplicate_object THEN null;
 END $$;
 
 DO $$ BEGIN
-    CREATE TYPE otp_purpose AS ENUM ('LOGIN', 'TRANSFER', 'PASSWORD_RESET', 'ACCOUNT_VERIFICATION');
+    CREATE TYPE otp_purpose AS ENUM ('LOGIN_2FA', 'TRANSFER_CONFIRM', 'PASSWORD_RESET');
 EXCEPTION
     WHEN duplicate_object THEN null;
 END $$;
