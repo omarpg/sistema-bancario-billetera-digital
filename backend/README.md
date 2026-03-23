@@ -39,6 +39,7 @@ backend/
 │   └── test/
 ├── Dockerfile
 ├── .dockerignore
+├── README.md
 └── pom.xml
 ```
 
@@ -113,39 +114,67 @@ Ver diagrama completo en: [`/docs/architecture/database-schema.md`](../docs/arch
 | ------ | -------------------- | -------------------------- |
 | GET    | `/api/accounts`      | Listar cuentas del usuario |
 | GET    | `/api/accounts/{id}` | Detalle de cuenta          |
-| POST   | `/api/accounts`      | Crear nueva cuenta         |
 
 ### Transferencias
 
-| Método | Endpoint              | Descripción                 |
-| ------ | --------------------- | --------------------------- |
-| POST   | `/api/transfers`      | Realizar transferencia      |
-| GET    | `/api/transfers`      | Historial de transferencias |
-| GET    | `/api/transfers/{id}` | Detalle de transferencia    |
+| Método | Endpoint                      | Descripción                         |
+| ------ | ----------------------------- | ----------------------------------- |
+| POST   | `/api/transfers/initiate`     | Iniciar transferencia y generar OTP |
+| POST   | `/api/transfers/confirm`      | Confirmar transferencia con OTP     |
+| GET    | `/api/transfers/{id}/receipt` | Descargar comprobante PDF           |
 
 ### Contactos
 
 | Método | Endpoint             | Descripción         |
 | ------ | -------------------- | ------------------- |
 | GET    | `/api/contacts`      | Listar contactos    |
+| GET    | `/api/contacts/{id}` | Detalle de contacto |
 | POST   | `/api/contacts`      | Crear contacto      |
 | PUT    | `/api/contacts/{id}` | Actualizar contacto |
 | DELETE | `/api/contacts/{id}` | Eliminar contacto   |
 
 ### Notificaciones
 
-| Método | Endpoint                       | Descripción           |
-| ------ | ------------------------------ | --------------------- |
-| GET    | `/api/notifications`           | Listar notificaciones |
-| PATCH  | `/api/notifications/{id}/read` | Marcar como leída     |
+| Método | Endpoint                           | Descripción                      |
+| ------ | ---------------------------------- | -------------------------------- |
+| GET    | `/api/notifications`               | Listar últimas 20 notificaciones |
+| GET    | `/api/notifications/unread-count`  | Contar notificaciones no leídas  |
+| PATCH  | `/api/notifications/{id}/read`     | Marcar como leída                |
+| PATCH  | `/api/notifications/read-all`      | Marcar todas leídas              |
 
-### Indicadores Económicos
+### Dashboard data
+
+| Método | Endpoint                 | Descripción          |
+| ------ | ------------------------ | -------------------- |
+| GET    | `/api/dashboard/summary` | Datos para dashboard |
+
+### Perfil y seguridad
+
+| Método | Endpoint                        | Descripción            |
+| ------ | ------------------------------- | ---------------------- |
+| GET    | `/api/security/settings`        | Datos para dashboard   |
+| PUT    | `/api/security/change-password` | Cambiar contraseña     |
+| PUT    | `/api/security/2fa`             | Activar/desactivar 2FA |
+
+### Historial de Transacciones
+
+| Método | Endpoint                        | Descripción            |
+| ------ | ------------------------------- | ---------------------- |
+| GET    | `/api/transactions`             | Listar transacciones   |
+| GET    | `/api/transactions/{id}`        | Detalle de transacción |
+
+### Indicadores Económicos (crear pública)
+
+| Método | Endpoint              | Descripción             |
+| ------ | --------------------- | ----------------------- |
+| GET    | `/api/currency-rates` | Obtener UF, USD, EUR    |
+| PUT    | `/api/currency-rates` | Actualizar UF, USD, EUR |
+
+### Health
 
 | Método | Endpoint              | Descripción          |
 | ------ | --------------------- | -------------------- |
-| GET    | `/api/currency-rates` | Obtener UF, USD, EUR |
-
-Ver documentación completa en: [`/docs/architecture/backend-layers.md`](../docs/architecture/backend-layers.md)
+| GET    | `/api/health`         | Health check         |
 
 ---
 
@@ -177,8 +206,8 @@ spring.datasource.password=TU_PASSWORD_SUPABASE
 
 ### Con Docker (Recomendado)
 ```bash
-# Desde la raíz del proyecto
-docker-compose up
+# Desde la raíz del proyecto principal
+docker-compose up --build
 ```
 
 Backend disponible en: `http://localhost:8080`
@@ -190,7 +219,7 @@ Backend disponible en: `http://localhost:8080`
 # Ejecutar base de datos en Supabase
 # Ver: /database/schema-supabase.sql
 
-# Instalar dependencias y ejecutar
+# Instalar dependencias y ejecutar (o directamente desde el IDE)
 mvn spring-boot:run
 ```
 
@@ -216,8 +245,8 @@ mvn test jacoco:report
 
 ### Inicializar con Docker
 ```bash
-docker-compose up postgres
-# Se ejecuta automáticamente: database/schema-docker.sql
+# Se ejecuta junto al backend desde la raiz
+docker-compose up --build
 ```
 
 ### Inicializar con Supabase
@@ -237,7 +266,6 @@ docker-compose up postgres
 
 - **Lombok**: Reduce boilerplate (getters, setters, builders)
 - **Spring DevTools**: Hot reload en desarrollo
-- **H2 Console**: Base de datos en memoria para tests (opcional)
 
 ---
 
@@ -246,15 +274,16 @@ docker-compose up postgres
 - Las fechas `created_at` son manejadas automáticamente por JPA (`@PrePersist`)
 - Los ENUMs de PostgreSQL están mapeados como `@Enumerated(EnumType.STRING)`
 - El `operation_number` de transacciones usa secuencia autoincrementable
+- Códitos otp expiran en 5 minutos y se muestran en consola
+- Notificación `LOGIN_NEW_DEVICE` existe en db pero no existe funcionalidad por ahora
 
 ---
 
 ## 📚 Documentación Adicional
 
-- [Arquitectura del Sistema](../docs/architecture/system-overview.md)
-- [Flujo de Autenticación](../docs/architecture/auth-flow.md)
-- [Flujo de Transferencias](../docs/architecture/transfer-flow.md)
-- [Schema de Base de Datos](../docs/architecture/database-schema.md)
+- [README Principal](../README.md)
+- [Arquitectura del Backend](./src/main/java/com/billetera/backend/ARCHITECTURE.md)
+- [Documentación Spring Boot](https://spring.io/projects/spring-boot)
 
 ---
 

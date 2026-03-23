@@ -54,10 +54,10 @@ public class NotificationController {
     }
 
     /**
-     * PUT /api/notifications/{id}/read
+     * PATCH /api/notifications/{id}/read
      * Marcar notificación como leída
      */
-    @PutMapping("/{id}/read")
+    @PatchMapping("/{id}/read")
     public ResponseEntity<NotificationResponseDTO> markAsRead(
             @PathVariable UUID id,
             @RequestHeader("Authorization") String authHeader

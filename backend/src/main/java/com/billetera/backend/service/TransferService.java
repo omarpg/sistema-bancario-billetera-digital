@@ -28,7 +28,7 @@ public class TransferService {
     private final TransactionRepository transactionRepository;
     private final OtpCodeRepository otpCodeRepository;
     private final NotificationRepository notificationRepository;
-    //private final UserRepository userRepository;
+    private final NotificationService notificationService;
     private final OtpGenerator otpGenerator;
 
     /**
@@ -157,6 +157,7 @@ public class TransferService {
 
         // Ejecutar transferencia
         Account sourceAccount = transaction.getSourceAccount();
+        Account destAccount = transaction.getDestAccount();
 
         // Verificar saldo nuevamente (por si acaso)
         if (sourceAccount.getBalance().compareTo(transaction.getAmount()) < 0) {
@@ -165,27 +166,33 @@ public class TransferService {
             throw new BadRequestException("Saldo insuficiente");
         }
 
-        // Restar de cuenta origen
+        // Actualizar balance
         sourceAccount.setBalance(sourceAccount.getBalance().subtract(transaction.getAmount()));
         accountRepository.save(sourceAccount);
+
+        // Sumar a cuenta destino (si es cuenta interna)
+        if (destAccount != null) {
+            destAccount.setBalance(destAccount.getBalance().add(transaction.getAmount()));
+            accountRepository.save(destAccount);
+        }
 
         // Actualizar estado de transacción
         transaction.setStatus(TransactionStatus.COMPLETED);
         transaction = transactionRepository.save(transaction);
 
-        // Crear notificación para el usuario
-        Notification notification = Notification.builder()
-                .user(sourceAccount.getUser())
-                .type(NotificationType.TRANSFER_SENT)
-                .title("Transferencia exitosa")
-                .message(String.format("Transferiste $%,.0f a %s",
-                        transaction.getAmount(),
-                        "destinatario")) // Aquí deberías obtener el nombre del contacto
-                .isRead(false)
-                .relatedTransaction(transaction)
-                .build();
+        // Delegar creación de notificaciones a NotificationService
+        notificationService.createTransferNotifications(transaction, sourceAccount, destAccount);
 
-        notificationRepository.save(notification);
+        // Obtener información real del destinatario
+        String destAccountNumber = "Cuenta externa";
+        String destName = "Destinatario";
+
+        if (destAccount != null) {
+            destAccountNumber = destAccount.getAccountNumber();
+            destName = destAccount.getUser() != null
+                    ? destAccount.getUser().getFullName()
+                    : "Cuenta interna";
+        }
 
         return TransferResponseDTO.builder()
                 .transactionId(transaction.getId())
@@ -193,8 +200,8 @@ public class TransferService {
                 .status(transaction.getStatus())
                 .amount(transaction.getAmount())
                 .sourceAccountNumber(sourceAccount.getAccountNumber())
-                .destAccountNumber("Cuenta externa") // Mejorar con info del contacto
-                .destName("Destinatario") // Mejorar con info del contacto
+                .destAccountNumber(destAccountNumber)
+                .destName(destName)
                 .description(transaction.getDescription())
                 .message("Transferencia completada exitosamente")
                 .build();

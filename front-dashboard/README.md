@@ -88,17 +88,15 @@ front-dashboard/
 - ✅ Últimos movimientos de cada cuenta
 
 ### Transferencias
-- ✅ Flujo en 3 pasos (datos → verificar → confirmación)
+- ✅ Flujo en 3 pasos (datos → confirmar → verificar)
 - ✅ Transferencias a contactos guardados
-- ✅ Transferencias a cuentas nuevas (con validación RUT)
 - ✅ Validación de saldo en tiempo real
-- ✅ Comprobante descargable en PDF
+- ✅ Comprobante descargable en HTML, manualmente se puede descargar a pdf
 
 ### Gestión de Contactos
 - ✅ CRUD completo de contactos
 - ✅ Validación de RUT chileno
 - ✅ Búsqueda y filtrado
-- ✅ Favoritos (opcional)
 
 ### Notificaciones
 - ✅ Centro de notificaciones
@@ -107,7 +105,6 @@ front-dashboard/
 - ✅ Toast notifications
 
 ### Perfil y Seguridad
-- ✅ Actualizar información personal
 - ✅ Cambio de contraseña
 - ✅ Habilitar/deshabilitar 2FA
 - ✅ Visualizar último login

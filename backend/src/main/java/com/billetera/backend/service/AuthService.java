@@ -31,21 +31,16 @@ import java.time.LocalDateTime;
 public class AuthService {
 
     private final UserRepository userRepository;
-
     private final AccountRepository accountRepository;
-
     private final OtpCodeRepository otpCodeRepository;
-
+    private final NotificationService notificationService;
     private final PasswordEncoder passwordEncoder;
-
     private final JwtUtil jwtUtil;
-
     private final RutValidator rutValidator;
-
     private final OtpGenerator otpGenerator;
 
     /**
-     * Tarea 2.5 — Registro de nuevo usuario
+     * Registro de nuevo usuario
      */
     @Transactional
     public AuthResponseDTO register(RegisterRequestDTO request) {
@@ -76,17 +71,20 @@ public class AuthService {
 
         user = userRepository.save(user);
 
-        // CREAR CUENTA VISTA AUTOMÁTICAMENTE
+        // CREAR CUENTA VISTA AUTOMÁTICAMENTE CON SALDO 500.000 CLP
         Account defaultAccount = Account.builder()
                 .user(user)
                 .accountNumber(generateAccountNumber())
                 .type(AccountType.VISTA)
                 .status(AccountStatus.ACTIVE)
-                .balance(BigDecimal.ZERO)
+                .balance(new BigDecimal("500000"))
                 .currency("CLP")
                 .build();
 
-        accountRepository.save(defaultAccount);
+        defaultAccount = accountRepository.save(defaultAccount);
+
+        // Delegar notificación de bienvenida a cuenta creada
+        notificationService.createAccountCreatedNotification(user, defaultAccount);
 
         System.out.println("=== CUENTA CREADA AUTOMÁTICAMENTE ===");
         System.out.println("Usuario: " + user.getFullName());
@@ -106,7 +104,7 @@ public class AuthService {
     }
 
     /**
-     * Tarea 2.6 — Login (fase 1)
+     * Login
      */
     @Transactional
     public AuthResponseDTO login(LoginRequestDTO request) {
@@ -137,8 +135,8 @@ public class AuthService {
 
             otpCodeRepository.save(otp);
 
-            // TODO: Enviar OTP por email o SMS (por ahora solo lo guardamos en BD)
-            // En desarrollo, puedes loggearlo:
+            // Enviar OTP por email o SMS (para funcionaidad real)
+            // En desarrollo se lee:
             System.out.println("=== OTP GENERADO ===");
             System.out.println("Usuario: " + user.getEmail());
             System.out.println("Código: " + otpCode);
@@ -171,7 +169,7 @@ public class AuthService {
     }
 
     /**
-     * Tarea 2.7 — Verificar OTP
+     * Verificar OTP
      */
     @Transactional
     public AuthResponseDTO verifyOtp(VerifyOtpRequestDTO request) {

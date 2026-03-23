@@ -116,7 +116,7 @@ export default function ContactForm({ contact, onSubmit, onCancel }: ContactForm
         id="rut"
         label="RUT"
         type="text"
-        value={formData.rut}
+        value={formatRut(formData.rut)}
         onChange={handleRutChange}
         placeholder="12.345.678-9"
         error={errors.rut}
@@ -133,7 +133,10 @@ export default function ContactForm({ contact, onSubmit, onCancel }: ContactForm
           onChange={(e) => setFormData({ ...formData, bankName: e.target.value })}
           className={`input-field ${errors.bankName ? 'input-error' : ''}`}
         >
-          <option value="">Seleccionar banco</option>
+          <option value="" disabled>
+            -- Seleccionar banco --
+          </option>
+          <option value="Billetera Digital">Billetera Digital</option>
           <option value="Banco Estado">Banco Estado</option>
           <option value="Banco de Chile">Banco de Chile</option>
           <option value="Banco Santander">Banco Santander</option>
@@ -174,7 +177,9 @@ export default function ContactForm({ contact, onSubmit, onCancel }: ContactForm
           onChange={(e) => setFormData({ ...formData, accountType: e.target.value })}
           className={`input-field ${errors.accountType ? 'input-error' : ''}`}
         >
-          <option value="">Seleccionar tipo</option>
+          <option value="" disabled>
+            -- Seleccionar tipo --
+          </option>
           <option value="Cuenta Corriente">Cuenta Corriente</option>
           <option value="Cuenta Vista">Cuenta Vista</option>
           <option value="Cuenta de Ahorro">Cuenta de Ahorro</option>

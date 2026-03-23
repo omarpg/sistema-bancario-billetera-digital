@@ -15,7 +15,7 @@ export const notificationsService = {
   },
 
   async markAsRead(id: string): Promise<void> {
-    await apiClient.put(`/notifications/${id}/read`);
+    await apiClient.patch(`/notifications/${id}/read`);
   },
 
   async markAllAsRead(): Promise<void> {

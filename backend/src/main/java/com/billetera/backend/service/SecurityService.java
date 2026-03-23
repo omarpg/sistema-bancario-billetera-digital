@@ -3,9 +3,12 @@ package com.billetera.backend.service;
 import com.billetera.backend.dto.request.ChangePasswordRequestDTO;
 import com.billetera.backend.dto.request.Toggle2FARequestDTO;
 import com.billetera.backend.dto.response.SecuritySettingsDTO;
+import com.billetera.backend.entity.Notification;
 import com.billetera.backend.entity.User;
+import com.billetera.backend.entity.enums.NotificationType;
 import com.billetera.backend.exception.BadRequestException;
 import com.billetera.backend.exception.ResourceNotFoundException;
+import com.billetera.backend.repository.NotificationRepository;
 import com.billetera.backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,6 +24,8 @@ public class SecurityService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final NotificationRepository notificationRepository;
+    private final NotificationService notificationService;
 
     /**
      * Obtener configuración de seguridad del usuario
@@ -64,6 +69,9 @@ public class SecurityService {
         user.setLastPasswordChange(LocalDateTime.now());
 
         userRepository.save(user);
+
+        // Delegar creación de notificación a NotificationService
+        notificationService.createPasswordChangedNotification(user);
 
         System.out.println("=== CONTRASEÑA CAMBIADA ===");
         System.out.println("Usuario: " + user.getEmail());

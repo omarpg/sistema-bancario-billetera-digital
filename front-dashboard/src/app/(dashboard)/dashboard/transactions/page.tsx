@@ -81,7 +81,7 @@ export default function TransactionsPage() {
   const getAccountNumber = (accountId?: string) => {
     if (!accountId) return 'Externa';
     const account = accounts.find((a) => a.id === accountId);
-    return account?.accountNumber || accountId.substring(0, 8) + '...';
+    return account?.accountNumber || accountId.substring(0, 10);
   };
 
   const getTransactionTypeLabel = (type: string) => {
@@ -252,9 +252,9 @@ export default function TransactionsPage() {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
                         {incoming ? (
-                          <span className="text-green-600">← {getAccountNumber(tx.sourceAccountId)}</span>
+                          <span className="text-green-600">← {getAccountNumber(tx.sourceAccountNumber)}</span>
                         ) : (
-                          <span className="text-gray-600">→ {getAccountNumber(tx.destAccountId)}</span>
+                          <span className="text-gray-600">→ {getAccountNumber(tx.destAccountNumber)}</span>
                         )}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold">
@@ -333,11 +333,11 @@ export default function TransactionsPage() {
                 </div>
                 <div>
                   <p className="text-sm text-gray-600">Cuenta origen</p>
-                  <p className="font-medium">{getAccountNumber(selectedTransaction.sourceAccountId)}</p>
+                  <p className="font-medium wrap-break-word">{getAccountNumber(selectedTransaction.sourceAccountNumber)}</p>
                 </div>
                 <div>
                   <p className="text-sm text-gray-600">Cuenta destino</p>
-                  <p className="font-medium">{getAccountNumber(selectedTransaction.destAccountId)}</p>
+                  <p className="font-medium wrap-break-word">{getAccountNumber(selectedTransaction.destAccountNumber)}</p>
                 </div>
               </div>
 

@@ -12,10 +12,6 @@ interface TransferReceiptProps {
 export default function TransferReceipt({ isOpen, onClose, data }: TransferReceiptProps) {
   if (!isOpen) return null;
 
-  const handlePrint = () => {
-    window.print();
-  };
-
   const handleDownloadPDF = () => {
     generatePDF();
   };
@@ -29,10 +25,24 @@ export default function TransferReceipt({ isOpen, onClose, data }: TransferRecei
         <meta charset="UTF-8">
         <title>Comprobante de Transferencia #${data.operationNumber}</title>
         <style>
+          * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+          }
           body {
             font-family: Arial, sans-serif;
-            margin: 40px;
+            background-color: #f5f5f5;
+            padding: 20px;
             color: #333;
+          }
+          .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
           }
           .header {
             text-align: center;
@@ -129,54 +139,56 @@ export default function TransferReceipt({ isOpen, onClose, data }: TransferRecei
         </style>
       </head>
       <body>
-        <div class="header">
-          <h1>✓ Transferencia Exitosa</h1>
-          <p>Billetera Digital</p>
-        </div>
-
-        <div class="operation-number">
-          <div class="label">Número de Operación</div>
-          <div class="number">#${data.operationNumber}</div>
-        </div>
-
-        <div class="amount">
-          <div class="label">Monto Transferido</div>
-          <div class="value">${formatCurrency(data.amount)}</div>
-        </div>
-
-        <div class="details">
-          <div class="detail-row">
-            <span class="detail-label">Fecha y hora</span>
-            <span class="detail-value">${formatDateTime(data.date)}</span>
+        <div class="container">
+          <div class="header">
+            <h1>✓ Transferencia Exitosa</h1>
+            <p>Billetera Digital</p>
           </div>
-          <div class="detail-row">
-            <span class="detail-label">Cuenta origen</span>
-            <span class="detail-value">${data.sourceAccountNumber}</span>
-          </div>
-          <div class="detail-row">
-            <span class="detail-label">Destinatario</span>
-            <span class="detail-value">${data.destinationName}</span>
-          </div>
-          <div class="detail-row">
-            <span class="detail-label">Cuenta destino</span>
-            <span class="detail-value">${data.destinationAccountNumber}</span>
-          </div>
-          ${data.description ? `
-          <div class="detail-row">
-            <span class="detail-label">Descripción</span>
-            <span class="detail-value">${data.description}</span>
-          </div>
-          ` : ''}
-        </div>
 
-        <div class="status">
-          <span class="status-badge">✓ Completada</span>
-        </div>
+          <div class="operation-number">
+            <div class="label">Número de Operación</div>
+            <div class="number">#${data.operationNumber}</div>
+          </div>
 
-        <div class="footer">
-          <p><strong>Billetera Digital</strong></p>
-          <p>Este documento es válido como comprobante de pago</p>
-          <p>Generado el ${formatDateTime(new Date().toISOString())}</p>
+          <div class="amount">
+            <div class="label">Monto Transferido</div>
+            <div class="value">${formatCurrency(data.amount)}</div>
+          </div>
+
+          <div class="details">
+            <div class="detail-row">
+              <span class="detail-label">Fecha y hora</span>
+              <span class="detail-value">${formatDateTime(data.date)}</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">N° Cuenta origen</span>
+              <span class="detail-value">${data.sourceAccountNumber}</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Destinatario</span>
+              <span class="detail-value">${data.destinationName}</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">N° Cuenta destino</span>
+              <span class="detail-value">${data.destinationAccountNumber}</span>
+            </div>
+            ${data.description ? `
+            <div class="detail-row">
+              <span class="detail-label">Descripción</span>
+              <span class="detail-value">${data.description}</span>
+            </div>
+            ` : ''}
+          </div>
+
+          <div class="status">
+            <span class="status-badge">✓ Completada</span>
+          </div>
+
+          <div class="footer">
+            <p><strong>Billetera Digital</strong></p>
+            <p>Este documento es una imitación de comprobante de pago</p>
+            <p>Generado el ${formatDateTime(new Date().toISOString())}</p>
+          </div>
         </div>
       </body>
       </html>
@@ -243,7 +255,7 @@ export default function TransferReceipt({ isOpen, onClose, data }: TransferRecei
             </div>
 
             <div className="border-b border-gray-200 pb-3">
-              <p className="text-xs text-gray-600">Cuenta origen</p>
+              <p className="text-xs text-gray-600">N° Cuenta origen</p>
               <p className="text-sm font-semibold text-gray-900">{data.sourceAccountNumber}</p>
             </div>
 
@@ -283,16 +295,6 @@ export default function TransferReceipt({ isOpen, onClose, data }: TransferRecei
         {/* Botones de acción fijos al fondo */}
         <div className="shrink-0 p-4 border-t border-gray-200 print:hidden">
           <div className="flex flex-col sm:flex-row gap-2">
-            <button
-              onClick={handlePrint}
-              className="flex-1 flex items-center justify-center space-x-2 px-3 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-sm font-medium transition-colors cursor-pointer"
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
-              </svg>
-              <span>Imprimir</span>
-            </button>
-
             <button
               onClick={handleDownloadPDF}
               className="flex-1 flex items-center justify-center space-x-2 px-3 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg text-sm font-medium transition-colors cursor-pointer"

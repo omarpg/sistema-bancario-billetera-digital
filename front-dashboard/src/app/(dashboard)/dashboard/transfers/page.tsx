@@ -299,12 +299,18 @@ export default function TransfersPage() {
                     <select
                       id="sourceAccount"
                       value={sourceAccountId}
-                      onChange={(e) => setSourceAccountId(e.target.value)}
+                      onChange={(e) => {
+                        setSourceAccountId(e.target.value);
+                        setErrors((prev) => ({ ...prev, sourceAccount: "" }));
+                      }}
                       className={`input-field ${errors.sourceAccount ? 'input-error' : ''}`}
                     >
+                      <option value="" disabled>
+                        -- Selecciona una cuenta --
+                      </option>
                       {accounts.map((account) => (
                         <option key={account.id} value={account.id}>
-                          {account.type} / {account.accountNumber} / {formatCurrency(account.balance)}
+                          {account.type} • {account.accountNumber} • {formatCurrency(account.balance)}
                         </option>
                       ))}
                     </select>
@@ -318,36 +324,15 @@ export default function TransfersPage() {
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Destino
                     </label>
-                    <div className="flex space-x-4 mb-4">
-                      <button
-                        type="button"
-                        onClick={() => setDestinationType('contact')}
-                        className={`flex-1 py-2 px-4 rounded-lg border-2 transition-colors cursor-pointer ${destinationType === 'contact'
-                          ? 'border-primary-600 bg-primary-50 text-primary-700'
-                          : 'border-gray-200 hover:border-gray-300'
-                          }`}
-                      >
-                        Contacto guardado
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setDestinationType('manual')}
-                        className={`flex-1 py-2 px-4 rounded-lg border-2 transition-colors cursor-pointer ${destinationType === 'manual'
-                          ? 'border-primary-600 bg-primary-50 text-primary-700'
-                          : 'border-gray-200 hover:border-gray-300'
-                          }`}
-                      >
-                        Ingresar manualmente
-                      </button>
-                    </div>
-
                     {destinationType === 'contact' ? (
                       <select
                         value={selectedContactId}
                         onChange={(e) => setSelectedContactId(e.target.value)}
                         className={`input-field ${errors.destination ? 'input-error' : ''}`}
                       >
-                        <option value="">Seleccionar contacto</option>
+                        <option value="" disabled>
+                          -- Selecciona contacto --
+                        </option>
                         {contacts.map((contact) => (
                           <option key={contact.id} value={contact.id}>
                             {contact.fullName} - {contact.accountNumber}
