@@ -6,29 +6,35 @@ Aplicación web full-stack de sistema financiero que simula funcionalidades banc
 
 ---
 
-## 📸 Screenshots (por hacer)
+## 📸 Screenshots
+
+> Revisarlas todas en [Ver Imágenes](./screenshots/)
 
 ### Portal Público
-![Home Page](docs/screenshots/portal-home.png)
-*Landing page optimizada con Lighthouse 100/100*
+![Home Page](./screenshots/Portal-imgs/ss_billetera_homepage.jpg)
+*Home page optimizada con Lighthouse 100/100*
 
-![Simulador](docs/screenshots/portal-simulator.png)
+![Simulador](./screenshots/Portal-imgs/ss_billetera_simulador.jpg)
 *Simulador de crédito interactivo con cálculos en tiempo real*
 
-![Indicadores](docs/screenshots/portal-indicators.png)
+![Simulador](./screenshots/Portal-imgs/ss_billetera_simulador_result.jpg)
+*Resultado de Simulador de crédito*
+
+![Indicadores](./screenshots/Portal-imgs/ss_billetera_indicadores.jpg)
 *Indicadores económicos actualizados desde mindicador.cl*
 
 ### Dashboard de Usuario
-![Login](docs/screenshots/dashboard-login.png)
+![Login](./screenshots/Dashboard-imgs/ss_billetera_login.jpg)
 *Login con autenticación de dos factores*
 
-![Dashboard](docs/screenshots/dashboard-home.png)
+![Dashboard](./screenshots/Dashboard-imgs/ss_billetera_dashboard_inicio.jpg)
 *Vista principal con resumen de cuentas y actividad*
 
-![Transferencias](docs/screenshots/dashboard-transfers.png)
+![Transferencias](./screenshots/Dashboard-imgs/ss_billetera_dashboard_transf.jpg)
+![Datos confirmados](./screenshots/Dashboard-imgs/ss_billetera_dashboard_transf_comp.jpg)
 *Flujo completo de transferencia en 3 pasos con verificación OTP*
 
-![Comprobante](docs/screenshots/dashboard-receipt.png)
+![Comprobante](./screenshots/Dashboard-imgs/ss_billetera_dashboard_transf_comp_imprimible.jpg)
 *Comprobante de transferencia con opción de descarga*
 
 ---
@@ -52,7 +58,7 @@ Aplicación web full-stack de sistema financiero que simula funcionalidades banc
 - ✅ Manejo seguro de sesiones con Zustand + localStorage
 
 ### 💳 Gestión de Cuentas
-- ✅ Creación automática de Cuenta Vista al registrarse
+- ✅ Creación automática de Cuenta Vista al registrarse (Monto incial: $500.000 CLP)
 - ✅ Soporte para múltiples cuentas (Vista, Corriente, Ahorro)
 - ✅ Visualización de saldo en tiempo real
 - ✅ Historial de movimientos por cuenta
@@ -75,7 +81,7 @@ Aplicación web full-stack de sistema financiero que simula funcionalidades banc
 - ✅ Búsqueda y filtrado
 - ✅ Asociación con transferencias
 
-### 📊 Transacciones
+### 📊 Historial de Transacciones
 - ✅ Historial completo de movimientos
 - ✅ Filtros por tipo (Transferencia, Depósito, Retiro)
 - ✅ Filtros por estado (Pendiente, Confirmada, Completada, Fallida)
@@ -98,7 +104,7 @@ Aplicación web full-stack de sistema financiero que simula funcionalidades banc
 - ✅ Job programado que actualiza indicadores 2 veces al día
 - ✅ Almacenamiento en base de datos para consultas rápidas
 - ✅ Integración con API de mindicador.cl
-- ✅ Sistema de fallback en caso de falla de API
+- ✅ Sistema de fallback en API propia en caso de error en mindicador.cl
 
 ---
 
@@ -417,7 +423,7 @@ sistema-bancario-billetera-digital/
 8. Frontend → Muestra comprobante con detalles
 ```
 
-### Diagrama de Base de Datos (Simplificado)
+### Diagrama de Base de Datos (Adjuntar imagen pendiente)
 ```
 users (1) ──── (N) accounts
   │                  │
@@ -476,7 +482,7 @@ npm run test
 
 - [ ] El sistema de OTP por email requiere configuración SMTP adicional, por ahora se ve en consola
 - [ ] Los indicadores económicos dependen de disponibilidad de mindicador.cl
-- [ ] El comprobante se descarga como HTML (requiere conversión manual a PDF)
+- [ ] El comprobante se descarga como HTML (se puede bajar como PDF desde la opción imprimir)
 
 ---
 

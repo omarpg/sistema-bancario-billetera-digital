@@ -185,13 +185,13 @@ export default function NotificationsPage() {
           {filteredNotifications.map((notification) => (
             <div
               key={notification.id}
-              className={`card transition-all cursor-pointer ${notification.isRead
+              className={`card transition-all ${notification.isRead
                 ? 'bg-white'
-                : 'bg-blue-50 border-blue-200 hover:bg-blue-100'
+                : 'bg-blue-50 border-blue-200 hover:bg-blue-100 cursor-pointer'
                 }`}
               onClick={() => !notification.isRead && handleMarkAsRead(notification.id)}
             >
-              <div className="flex items-start space-x-4">
+              <div className={`flex items-start space-x-4`}>
                 {/* Icono */}
                 <div className={`p-3 rounded-full ${getTypeBgColor(notification.type)}`}>
                   {getTypeIcon(notification.type)}

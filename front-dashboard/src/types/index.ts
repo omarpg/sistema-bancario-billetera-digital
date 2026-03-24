@@ -4,3 +4,4 @@ export * from './transaction';
 export * from './contact';
 export * from './transfer';
 export * from './security';
+export * from './notification';

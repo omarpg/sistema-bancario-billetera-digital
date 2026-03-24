@@ -74,7 +74,7 @@ select.input-field {
 }
 
 .card {
-  @apply bg-white rounded-xl shadow-sm p-6;
+  @apply rounded-xl shadow-sm p-6;
 }
 
 /* Estilos para impresión del comprobante */
