@@ -12,7 +12,7 @@ Aplicación web full-stack de sistema financiero que simula funcionalidades banc
 
 <details>
 
-<summary>### Portal Público</summary>
+<summary>Portal Público</summary>
 
 ![Home Page](./screenshots/Portal-imgs/ss_billetera_homepage.jpg)
 
@@ -32,19 +32,28 @@ Aplicación web full-stack de sistema financiero que simula funcionalidades banc
 
 </details>
 
-### Dashboard de Usuario
+<details>
+
+<summary>Dashboard de Usuario</summary>
+
 ![Login](./screenshots/Dashboard-imgs/ss_billetera_login.jpg)
+
 *Login con autenticación de dos factores*
 
 ![Dashboard](./screenshots/Dashboard-imgs/ss_billetera_dashboard_inicio.jpg)
+
 *Vista principal con resumen de cuentas y actividad*
 
 ![Transferencias](./screenshots/Dashboard-imgs/ss_billetera_dashboard_transf.jpg)
 ![Datos confirmados](./screenshots/Dashboard-imgs/ss_billetera_dashboard_transf_comp.jpg)
+
 *Flujo completo de transferencia en 3 pasos con verificación OTP*
 
 ![Comprobante](./screenshots/Dashboard-imgs/ss_billetera_dashboard_transf_comp_imprimible.jpg)
+
 *Comprobante de transferencia con opción de descarga*
+
+</details>
 
 ---
 
