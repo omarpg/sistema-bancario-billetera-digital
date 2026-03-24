@@ -10,18 +10,27 @@ Aplicación web full-stack de sistema financiero que simula funcionalidades banc
 
 > Revisarlas todas en [Ver Imágenes](./screenshots/)
 
-### Portal Público
+<details>
+
+<summary>### Portal Público</summary>
+
 ![Home Page](./screenshots/Portal-imgs/ss_billetera_homepage.jpg)
+
 *Home page optimizada con Lighthouse 100/100*
 
 ![Simulador](./screenshots/Portal-imgs/ss_billetera_simulador.jpg)
+
 *Simulador de crédito interactivo con cálculos en tiempo real*
 
 ![Simulador](./screenshots/Portal-imgs/ss_billetera_simulador_result.jpg)
+
 *Resultado de Simulador de crédito*
 
 ![Indicadores](./screenshots/Portal-imgs/ss_billetera_indicadores.jpg)
+
 *Indicadores económicos actualizados desde mindicador.cl*
+
+</details>
 
 ### Dashboard de Usuario
 ![Login](./screenshots/Dashboard-imgs/ss_billetera_login.jpg)
