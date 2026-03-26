@@ -3,25 +3,18 @@
 import { useState, useEffect } from 'react';
 import { useAuthStore } from '@/store/authStore';
 import { useDashboardStore } from '@/store/dashboardStore';
-//import { accountsService } from '@/lib/accounts';
 import { transactionsService } from '@/lib/transactions';
-//import { notificationsService } from '@/lib/notifications';
 import type { Transaction } from '@/types';
 import { formatCurrency, formatDateTime } from '@/lib/utils';
 import Link from 'next/link';
 
 export default function DashboardPage() {
   const user = useAuthStore((state) => state.user);
-  /*
-  const [accounts, setAccounts] = useState<Account[]>([]);
-  const [transactions, setTransactions] = useState<Transaction[]>([]);
-  const [unreadCount, setUnreadCount] = useState(0);
-  const [loading, setLoading] = useState(true);*/
 
   // Obtener datos del store (ya cargados en el layout)
   const accounts = useDashboardStore((state) => state.accounts);
-  const unreadCount = useDashboardStore((state) => state.unreadNotifications);
   const accountsLoaded = useDashboardStore((state) => state.accountsLoaded);
+  const unreadCount = useDashboardStore((state) => state.unreadNotifications);
 
   // Solo las transacciones se cargan aquí (lazy loading)
   const [transactions, setTransactions] = useState<Transaction[]>([]);
@@ -36,15 +29,6 @@ export default function DashboardPage() {
   const loadDashboardData = async () => {
     try {
       setLoading(true);
-      /*
-      const [accountsData, transactionsData, unreadNotifications] = await Promise.all([
-        accountsService.getAll(),
-        transactionsService.getAll(),
-        notificationsService.getUnreadCount(),
-      ]);
-      setAccounts(accountsData);
-      setTransactions(transactionsData.slice(0, 5)); // Últimas 5
-      setUnreadCount(unreadNotifications);*/
       const transactionsData = await transactionsService.getAll();
       setTransactions(transactionsData.slice(0, 5)); // Últimas 5
     } catch (error) {

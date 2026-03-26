@@ -27,7 +27,7 @@ public class NotificationService {
      */
     public List<NotificationResponseDTO> findByUserId(UUID userId) {
         List<Notification> notifications = notificationRepository
-                .findTop20ByUserIdOrderByCreatedAtDesc(userId);
+                .findTop20ByUserIdOrderByIsReadAscCreatedAtDesc(userId);
 
         return notifications.stream()
                 .map(this::convertToDTO)

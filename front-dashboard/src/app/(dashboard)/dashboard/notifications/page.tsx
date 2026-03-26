@@ -1,12 +1,16 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { notificationsService, type Notification } from '@/lib/notifications';
+import { notificationsService } from '@/lib/notifications';
 import { formatDateTime } from '@/lib/utils';
 import type { AxiosError } from 'axios';
+import { useDashboardStore } from '@/store/dashboardStore';
+import type { Notification } from '@/types';
+
 
 export default function NotificationsPage() {
   const [notifications, setNotifications] = useState<Notification[]>([]);
+  const { setUnreadNotifications } = useDashboardStore();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [filter, setFilter] = useState<'all' | 'unread'>('all');
@@ -32,9 +36,14 @@ export default function NotificationsPage() {
   const handleMarkAsRead = async (id: string) => {
     try {
       await notificationsService.markAsRead(id);
-      setNotifications(
-        notifications.map((n) => (n.id === id ? { ...n, isRead: true } : n))
+      // Nueva lista
+      const updated = notifications.map((n) =>
+        n.id === id ? { ...n, isRead: true } : n
       );
+      // Setear la nueva lista
+      setNotifications(updated);
+      // Calcular las no leídas desde la lista actualizada
+      setUnreadNotifications(updated.filter((n) => !n.isRead).length);
     } catch (err) {
       console.error('Error al marcar como leída:', err);
     }
@@ -44,6 +53,8 @@ export default function NotificationsPage() {
     try {
       await notificationsService.markAllAsRead();
       setNotifications(notifications.map((n) => ({ ...n, isRead: true })));
+      // Todas leídas, entonces 0 sin leer
+      setUnreadNotifications(0);
     } catch (err) {
       console.error('Error al marcar todas como leídas:', err);
     }

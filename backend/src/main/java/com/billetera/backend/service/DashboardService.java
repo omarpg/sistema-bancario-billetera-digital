@@ -7,7 +7,6 @@ import com.billetera.backend.entity.CurrencyRate;
 import com.billetera.backend.entity.Transaction;
 import com.billetera.backend.entity.enums.AccountStatus;
 import com.billetera.backend.entity.enums.TransactionStatus;
-//import com.billetera.backend.entity.enums.TransactionType;
 import com.billetera.backend.repository.*;
 import com.billetera.backend.util.TransactionMapper;
 import lombok.RequiredArgsConstructor;

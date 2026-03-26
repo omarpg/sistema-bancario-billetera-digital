@@ -1,12 +1,5 @@
 import apiClient from './api';
-
-export interface Notification {
-  id: string;
-  message: string;
-  type: string;
-  isRead: boolean;
-  createdAt: string;
-}
+import type { Notification } from '@/types';
 
 export const notificationsService = {
   async getAll(): Promise<Notification[]> {

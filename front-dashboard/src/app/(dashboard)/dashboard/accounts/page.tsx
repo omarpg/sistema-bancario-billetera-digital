@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-//import { accountsService } from '@/lib/accounts';
 import { useDashboardStore } from '@/store/dashboardStore';
 import { transactionsService } from '@/lib/transactions';
 import type { Account, Transaction } from '@/types';
@@ -10,41 +9,10 @@ import type { AxiosError } from 'axios';
 
 export default function AccountsPage() {
   const accounts = useDashboardStore((state) => state.accounts);
-  //const [accounts, setAccounts] = useState<Account[]>([]);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [selectedAccount, setSelectedAccount] = useState<Account | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-
-  /*
-  useEffect(() => {
-    loadAccounts();
-  }, []);
-
-  useEffect(() => {
-    if (selectedAccount) {
-      loadAccountTransactions(selectedAccount.id);
-    }
-  }, [selectedAccount]);
-
-  const loadAccounts = async () => {
-    try {
-      setLoading(true);
-      const data = await accountsService.getAll();
-      setAccounts(data);
-      if (data.length > 0) {
-        setSelectedAccount(data[0]);
-      }
-      setError('');
-    } catch (error: unknown) {
-      const axiosError = error as AxiosError<{ message: string }>;
-      const message = axiosError.response?.data?.message || 'Error al cargar cuentas';
-      setError(message);
-    } finally {
-      setLoading(false);
-    }
-  };
-  */
 
   // Seleccionar primera cuenta al cargar
   useEffect(() => {
@@ -104,21 +72,6 @@ export default function AccountsPage() {
     };
     return labels[status] || status;
   };
-
-  /*
-  if (loading) {
-    return (
-      <div className="p-6">
-        <div className="mb-6">
-          <h1 className="text-3xl font-bold text-gray-900">Mis Cuentas</h1>
-          <p className="text-gray-600 mt-1">Gestiona tus cuentas bancarias</p>
-        </div>
-        <div className="flex items-center justify-center h-64">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
-        </div>
-      </div>
-    );
-  }*/
 
   return (
     <div className="p-6">

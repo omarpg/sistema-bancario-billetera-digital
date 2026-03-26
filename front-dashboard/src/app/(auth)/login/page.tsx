@@ -124,7 +124,7 @@ export default function LoginPage() {
         </div>
 
         {/* Formulario */}
-        <div className="card">
+        <div className="card bg-white">
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* RUT o Email */}
             <Input
