@@ -185,24 +185,40 @@ CREATE INDEX idx_audit_action_created ON audit_logs(action, created_at DESC);
 -- =============================================
 -- DATOS DE PRUEBA
 -- =============================================
-
 -- Usuario Demo
 -- Email: demo@billetera.com
 -- Contraseña: pass1234
 -- RUT: 13.254.122-1
+-- =============================================
+-- Vini LLoros
+-- Email: vini@example.cl
+-- Contraseña: ViniPass
+-- RUT: 20.038.431-8
+-- =============================================
 INSERT INTO users (id, rut, full_name, email, password_hash, two_factor_enabled, last_password_change, created_at)
-VALUES (
-    '550e8400-e29b-41d4-a716-446655440000',
-    '132541221',
-    'Usuario Demo',
-    'demo@billetera.com',
-    '$2a$12$R42XIwkRmycfSAEK5gxSyurAmfnIyT84D/STifGyatv2LaHgChS12',
-    false,
-    now(),
-    now()
-);
+VALUES 
+    (
+        '550e8400-e29b-41d4-a716-446655440000',
+        '132541221',
+        'Usuario Demo',
+        'demo@billetera.com',
+        '$2a$12$R42XIwkRmycfSAEK5gxSyurAmfnIyT84D/STifGyatv2LaHgChS12',
+        false,
+        now(),
+        now()
+    ),
+    (
+        '46c53188-53e7-46e6-9e71-c86ed049d0ef',
+        '200384318',
+        'Vini LLoros',
+        'vini@example.cl',
+        '$2a$12$jTYbt98ckunOZi5bbAX5hORakPjSyr29tJXir3BG0GUtk0fcl957K',
+        false,
+        now(),
+        now()
+    );
 
--- Cuentas del Usuario Demo
+-- Cuentas Usuarios Demo
 INSERT INTO accounts (id, user_id, account_number, type, balance, currency, status, created_at)
 VALUES 
     (
@@ -224,9 +240,19 @@ VALUES
         'CLP',
         'ACTIVE',
         now()
+    ),
+    (
+        '660e8400-e29b-41d4-a716-446655440003',
+        '46c53188-53e7-46e6-9e71-c86ed049d0ef',
+        '0943218765',
+        'VISTA',
+        1500000.00,
+        'CLP',
+        'ACTIVE',
+        now()
     );
 
--- Contactos del Usuario Demo
+-- Contactos de Usuarios Demo
 INSERT INTO contacts (owner_user_id, full_name, rut, bank_name, account_number, account_type, email, created_at)
 VALUES 
     (
@@ -235,7 +261,7 @@ VALUES
         '196741291',
         'Banco de Chile',
         '1111111111',
-        'VISTA',
+        'Cuenta Vista',
         'juan.perez@email.com',
         now()
     ),
@@ -245,8 +271,28 @@ VALUES
         '201015944',
         'Banco Estado',
         '2222222222',
-        'CORRIENTE',
+        'Cuenta Corriente',
         'maria.gonzalez@email.com',
+        now()
+    ),
+    (
+        '46c53188-53e7-46e6-9e71-c86ed049d0ef',
+        'Ernesto Silva',
+        '201015944',
+        'Banco Santander',
+        '3333333333',
+        'Cuenta Corriente',
+        'ernesto.silva@email.com',
+        now()
+    ),
+    (
+        '46c53188-53e7-46e6-9e71-c86ed049d0ef',
+        'Usuario Demo',
+        '132541221',
+        'Billetera Digital',
+        '1234567890',
+        'Cuenta Vista',
+        'demo@billetera.com',
         now()
     );
 
@@ -273,6 +319,22 @@ VALUES
         'SYSTEM',
         'Cuenta Vista creada',
         'Se ha creado tu cuenta vista con saldo inicial de $500,000.',
+        false,
+        now()
+    ),
+    (
+        '46c53188-53e7-46e6-9e71-c86ed049d0ef',
+        'SYSTEM',
+        'Bienvenido',
+        'Bienvenido a Billetera Digital. Tu cuenta ha sido creada exitosamente.',
+        true,
+        now()
+    ),
+    (
+        '46c53188-53e7-46e6-9e71-c86ed049d0ef',
+        'SYSTEM',
+        'Cuenta Vista creada',
+        'Se ha creado tu cuenta vista con saldo inicial de $1.500,000.',
         false,
         now()
     );

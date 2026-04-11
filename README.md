@@ -410,6 +410,8 @@ sistema-bancario-billetera-digital/
 │   ├── package.json
 │   └── README.md
 │
+├── screenshots/
+│
 ├── LICENSE
 └── README.md
 ```

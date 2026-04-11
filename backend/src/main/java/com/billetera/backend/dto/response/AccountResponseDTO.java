@@ -23,6 +23,6 @@ public class AccountResponseDTO {
     private BigDecimal balance;
     private String currency;
     private AccountStatus status;
-    private BigDecimal balanceInUF;  // Balance equivalente en UF
+    private BigDecimal balanceInUF;
     private LocalDateTime createdAt;
 }

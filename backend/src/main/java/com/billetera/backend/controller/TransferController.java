@@ -61,8 +61,7 @@ public class TransferController {
     @GetMapping("/{id}/receipt")
     public ResponseEntity<byte[]> downloadReceipt(
             @PathVariable UUID id,
-            @RequestHeader("Authorization") String authHeader
-    ) {
+            @RequestHeader("Authorization") String authHeader) {
         String token = authHeader.substring(7);
         UUID userId = jwtUtil.extractUserId(token);
 
@@ -72,8 +71,6 @@ public class TransferController {
         headers.setContentType(MediaType.APPLICATION_PDF);
         headers.setContentDispositionFormData("attachment", "comprobante-" + id + ".pdf");
 
-        return ResponseEntity.ok()
-                .headers(headers)
-                .body(pdfBytes);
+        return ResponseEntity.ok().headers(headers).body(pdfBytes);
     }
 }

@@ -75,7 +75,7 @@ CREATE TABLE IF NOT EXISTS users (
     phone VARCHAR(15),
     totp_secret VARCHAR(64),
     two_factor_enabled BOOLEAN NOT NULL DEFAULT false,
-    created_at TIMESTAMP NOT NULL DEFAULT now(),
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     last_password_change TIMESTAMP,
     last_login TIMESTAMP
 );
@@ -95,7 +95,7 @@ CREATE TABLE IF NOT EXISTS accounts (
     balance NUMERIC NOT NULL DEFAULT 0,
     currency VARCHAR(5) NOT NULL,
     status account_status NOT NULL DEFAULT 'ACTIVE',
-    created_at TIMESTAMP NOT NULL DEFAULT now()
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE INDEX IF NOT EXISTS idx_accounts_user_id ON accounts(user_id);
@@ -113,7 +113,7 @@ CREATE TABLE IF NOT EXISTS contacts (
     account_number VARCHAR(30) NOT NULL,
     account_type VARCHAR(20) NOT NULL,
     email VARCHAR(100),
-    created_at TIMESTAMP NOT NULL DEFAULT now()
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE INDEX IF NOT EXISTS idx_contacts_owner ON contacts(owner_user_id);
@@ -131,7 +131,7 @@ CREATE TABLE IF NOT EXISTS transactions (
     status transaction_status NOT NULL DEFAULT 'PENDING',
     description TEXT,
     operation_number INTEGER NOT NULL DEFAULT nextval('transactions_operation_number_seq') UNIQUE,
-    created_at TIMESTAMP NOT NULL DEFAULT now()
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE INDEX IF NOT EXISTS idx_transactions_source ON transactions(source_account_id);
@@ -147,9 +147,9 @@ CREATE TABLE IF NOT EXISTS otp_codes (
     user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     code VARCHAR(6) NOT NULL,
     purpose otp_purpose NOT NULL,
-    expires_at TIMESTAMP NOT NULL DEFAULT (now() + interval '5 minutes'),
+    expires_at TIMESTAMP NOT NULL DEFAULT (CURRENT_TIMESTAMP + interval '5 minutes'),
     is_used BOOLEAN NOT NULL DEFAULT false,
-    created_at TIMESTAMP NOT NULL DEFAULT now()
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE INDEX IF NOT EXISTS idx_otp_active ON otp_codes(user_id, purpose, expires_at) WHERE (is_used = false);
@@ -166,7 +166,7 @@ CREATE TABLE IF NOT EXISTS notifications (
     message TEXT NOT NULL,
     is_read BOOLEAN NOT NULL DEFAULT false,
     related_transaction_id UUID REFERENCES transactions(id) ON DELETE NO ACTION,
-    created_at TIMESTAMP NOT NULL DEFAULT now()
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE INDEX IF NOT EXISTS idx_notifications_user_created ON notifications(user_id, created_at DESC);
@@ -180,7 +180,7 @@ CREATE INDEX IF NOT EXISTS idx_notifications_related_transaction ON notification
 CREATE TABLE IF NOT EXISTS currency_rates (
     code VARCHAR(10) PRIMARY KEY,
     value NUMERIC NOT NULL,
-    updated_at TIMESTAMP NOT NULL DEFAULT now()
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 -- =============================================
@@ -192,37 +192,50 @@ CREATE TABLE IF NOT EXISTS audit_logs (
     user_id UUID REFERENCES users(id) ON DELETE NO ACTION,
     action VARCHAR(50) NOT NULL,
     details JSONB,
-    created_at TIMESTAMP NOT NULL DEFAULT now()
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE INDEX IF NOT EXISTS idx_audit_user_created ON audit_logs(user_id, created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_audit_action_created ON audit_logs(action, created_at DESC);
 
 -- =============================================
-
--- =============================================
 -- DATOS DE PRUEBA
 -- =============================================
-
 -- Usuario Demo
 -- Email: demo@billetera.com
 -- Contraseña: pass1234
 -- RUT: 14.929.968-8
-INSERT INTO users (user_id, rut, full_name, email, password_hash, two_factor_enabled, last_password_change, created_at, updated_at)
-VALUES (
-    '550e8400-e29b-41d4-a716-446655440000',
-    '149299688',
-    'Usuario Demo',
-    'demo@billetera.com',
-    '$2a$12$R42XIwkRmycfSAEK5gxSyurAmfnIyT84D/STifGyatv2LaHgChS12',
-    false,
-    CURRENT_TIMESTAMP,
-    CURRENT_TIMESTAMP,
-    CURRENT_TIMESTAMP
-);
+-- =============================================
+-- Vini LLoros
+-- Email: vini@example.cl
+-- Contraseña: ViniPass
+-- RUT: 20.038.431-8
+-- =============================================
+INSERT INTO users (user_id, rut, full_name, email, password_hash, two_factor_enabled, last_password_change, created_at)
+VALUES 
+    (
+        '550e8400-e29b-41d4-a716-446655440000',
+        '149299688',
+        'Usuario Demo',
+        'demo@billetera.com',
+        '$2a$12$R42XIwkRmycfSAEK5gxSyurAmfnIyT84D/STifGyatv2LaHgChS12',
+        false,
+        CURRENT_TIMESTAMP,
+        CURRENT_TIMESTAMP
+    ),
+    (
+        '46c53188-53e7-46e6-9e71-c86ed049d0ef',
+        '200384318',
+        'Vini LLoros',
+        'vini@example.cl',
+        '$2a$12$jTYbt98ckunOZi5bbAX5hORakPjSyr29tJXir3BG0GUtk0fcl957K',
+        false,
+        CURRENT_TIMESTAMP,
+        CURRENT_TIMESTAMP
+    );
 
 -- Cuentas del Usuario Demo
-INSERT INTO accounts (id, user_id, account_number, type, status, balance, currency, created_at, updated_at)
+INSERT INTO accounts (id, user_id, account_number, type, status, balance, currency, created_at)
 VALUES 
     (
         '660e8400-e29b-41d4-a716-446655440001',
@@ -232,7 +245,6 @@ VALUES
         'ACTIVE',
         500000.00,
         'CLP',
-        CURRENT_TIMESTAMP,
         CURRENT_TIMESTAMP
     ),
     (
@@ -243,48 +255,62 @@ VALUES
         'ACTIVE',
         1000000.00,
         'CLP',
-        CURRENT_TIMESTAMP,
+        CURRENT_TIMESTAMP
+    ),
+    (
+        '660e8400-e29b-41d4-a716-446655440003',
+        '46c53188-53e7-46e6-9e71-c86ed049d0ef',
+        '0943218765',
+        'VISTA',
+        'ACTIVE',
+        1500000.00,
+        'CLP',
         CURRENT_TIMESTAMP
     );
 
 -- Contactos del Usuario Demo
-INSERT INTO contacts (user_id, full_name, rut, bank_name, account_number, account_type, email, created_at, updated_at)
+INSERT INTO contacts (owner_user_id, full_name, rut, bank_name, account_number, account_type, email, created_at)
 VALUES 
     (
         '550e8400-e29b-41d4-a716-446655440000',
         'Juan Pérez',
-        '50955745',
+        '196741291',
         'Banco de Chile',
         '1111111111',
-        'VISTA',
+        'Cuenta Vista',
         'juan.perez@email.com',
-        CURRENT_TIMESTAMP,
         CURRENT_TIMESTAMP
     ),
     (
         '550e8400-e29b-41d4-a716-446655440000',
         'María González',
-        '103003555',
+        '201015944',
         'Banco Estado',
         '2222222222',
-        'CORRIENTE',
+        'Cuenta Corriente',
         'maria.gonzalez@email.com',
-        CURRENT_TIMESTAMP,
+        CURRENT_TIMESTAMP
+    ),
+    (
+        '46c53188-53e7-46e6-9e71-c86ed049d0ef',
+        'Ernesto Silva',
+        '201015944',
+        'Banco Santander',
+        '3333333333',
+        'Cuenta Corriente',
+        'ernesto.silva@email.com',
+        CURRENT_TIMESTAMP
+    ),
+    (
+        '46c53188-53e7-46e6-9e71-c86ed049d0ef',
+        'Usuario Demo',
+        '132541221',
+        'Billetera Digital',
+        '1234567890',
+        'Cuenta Vista',
+        'demo@billetera.com',
         CURRENT_TIMESTAMP
     );
-
--- Transacción de prueba
-INSERT INTO transactions (source_account_id, dest_account_id, operation_number, type, status, amount, description, created_at)
-VALUES (
-    '660e8400-e29b-41d4-a716-446655440002',
-    NULL,
-    1000000001,
-    'TRANSFER',
-    'COMPLETED',
-    50000.00,
-    'Transferencia de prueba',
-    CURRENT_TIMESTAMP
-);
 
 -- Indicadores económicos
 INSERT INTO currency_rates (code, value, updated_at)
@@ -306,24 +332,25 @@ VALUES
     ),
     (
         '550e8400-e29b-41d4-a716-446655440000',
-        'TRANSFER',
-        'Transferencia realizada',
-        'Transferencia de $50,000 realizada exitosamente.',
+        'SYSTEM',
+        'Cuenta Vista creada',
+        'Se ha creado tu cuenta vista con saldo inicial de $500,000.',
+        false,
+        CURRENT_TIMESTAMP
+    ),
+    (
+        '46c53188-53e7-46e6-9e71-c86ed049d0ef',
+        'SYSTEM',
+        'Bienvenido',
+        'Bienvenido a Billetera Digital. Tu cuenta ha sido creada exitosamente.',
+        true,
+        CURRENT_TIMESTAMP
+    ),
+    (
+        '46c53188-53e7-46e6-9e71-c86ed049d0ef',
+        'SYSTEM',
+        'Cuenta Vista creada',
+        'Se ha creado tu cuenta vista con saldo inicial de $1.500,000.',
         false,
         CURRENT_TIMESTAMP
     );
-
--- =============================================
--- VERIFICACIÓN
--- =============================================
-
-DO $$
-BEGIN
-    RAISE NOTICE '========================================';
-    RAISE NOTICE 'BASE DE DATOS CREADA EXITOSAMENTE';
-    RAISE NOTICE '========================================';
-    RAISE NOTICE 'Tablas creadas: 8';
-    RAISE NOTICE 'Indicadores económicos inicializados: 3';
-    RAISE NOTICE '';
-    RAISE NOTICE '========================================';
-END $$;

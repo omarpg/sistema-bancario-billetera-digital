@@ -95,7 +95,7 @@ public class TransferService {
 
         otpCodeRepository.save(otp);
 
-        // TODO: Enviar OTP por email/SMS
+        // DATOS PARA SIMULAR ENVÍO DE OTP (EN PRODUCCIÓN SE ENVIARÍA POR EMAIL/SMS)
         System.out.println("=== OTP TRANSFERENCIA ===");
         System.out.println("Usuario: " + sourceAccount.getUser().getEmail());
         System.out.println("Código: " + otpCode);

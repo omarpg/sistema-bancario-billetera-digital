@@ -6,7 +6,7 @@ Panel de administración web desarrollado con **Next.js 15** que permite a los u
 
 ## 🚀 Stack Tecnológico
 
-- **Next.js 15.1** (App Router)
+- **Next.js 16** (App Router)
 - **React 19**
 - **TypeScript**
 - **Tailwind CSS 4**
@@ -57,7 +57,8 @@ front-dashboard/
 │   ├── store/                         # Zustand stores
 │   │   ├── authStore.ts               # Estado de autenticación
 │   │   └── dashboardStore.ts          # Estado global del dashboard
-│   └── types/                         # TypeScript types
+│   ├── types/                         # TypeScript types
+│   └── global.d.ts                    # Typing global
 ├── .env.local                         # Variables de entorno
 ├── next.config.js
 ├── README.md
@@ -216,6 +217,12 @@ Dashboard disponible en: `http://localhost:3000`
 - Email: demo@billetera.com
 - Contraseña: pass1234
 - RUT: 13.254.122-1
+
+
+- Nombre: Vini LLoros
+- Email: vini@example.cl
+- Contraseña: ViniPass
+- RUT: 20.038.431-8
 
 ---
 

@@ -4,8 +4,7 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/store/authStore';
 import { useDashboardStore } from '@/store/dashboardStore';
-import { accountsService } from '@/lib/accounts';
-import { notificationsService } from '@/lib/notifications';
+
 import Sidebar from '@/components/dashboard/Sidebar';
 import Header from '@/components/dashboard/Header';
 
@@ -18,8 +17,6 @@ export default function DashboardLayout({
   const hasHydrated = useAuthStore((state) => state._hasHydrated);
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
 
-  const { accountsLoaded, setAccounts, setUnreadNotifications } = useDashboardStore();
-
   // Solo verificar autenticación después de hidratar
   useEffect(() => {
     if (hasHydrated && !isAuthenticated) {
@@ -28,32 +25,22 @@ export default function DashboardLayout({
     }
   }, [hasHydrated, isAuthenticated, router]);
 
-  // Cargar datos críticos una vez autenticado
   useEffect(() => {
-    if (hasHydrated && isAuthenticated && !accountsLoaded) {
-      const loadCriticalData = async () => {
-        try {
-          console.log('=== CARGANDO DATOS CRÍTICOS DEL DASHBOARD ===');
-
-          const [accounts, unreadCount] = await Promise.all([
-            accountsService.getAll(),
-            notificationsService.getUnreadCount(),
-          ]);
-
-          setAccounts(accounts);
-          setUnreadNotifications(unreadCount);
-
-          console.log('✓ Cuentas cargadas:', accounts.length);
-          console.log('✓ Notificaciones sin leer:', unreadCount);
-          console.log('==============================================');
-        } catch (error) {
-          console.error('Error cargando datos críticos:', error);
-        }
+    try {
+      const loadDashboardData = async () => {
+        console.log('=== CARGANDO DATOS DEL DASHBOARD ===');
+        useDashboardStore.getState().loadDashboard();
       };
 
-      loadCriticalData();
+      loadDashboardData();
+    } catch (error) {
+      console.error('Error cargando datos del dashboard:', error);
+    } finally {
+      console.log('✓ Dashboard data cargada');
+      console.log('===================================');
     }
-  }, [hasHydrated, isAuthenticated, accountsLoaded, setAccounts, setUnreadNotifications]);
+  }, []);
+
 
   // Mostrar loader mientras se hidrata
   if (!hasHydrated) {

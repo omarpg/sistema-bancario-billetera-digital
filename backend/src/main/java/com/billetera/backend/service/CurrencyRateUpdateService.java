@@ -1,6 +1,7 @@
 package com.billetera.backend.service;
 
 import com.billetera.backend.dto.external.MindicadorResponseDTO;
+import com.billetera.backend.dto.response.CurrencyRateResponseDTO;
 import com.billetera.backend.entity.AuditLog;
 import com.billetera.backend.entity.CurrencyRate;
 import com.billetera.backend.repository.AuditLogRepository;
@@ -13,7 +14,9 @@ import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -93,6 +96,28 @@ public class CurrencyRateUpdateService {
         rate.setUpdatedAt(LocalDateTime.now());
 
         currencyRateRepository.save(rate);
+    }
+
+    /**
+     * Obtener Currencies más actuales
+     */
+    public List<CurrencyRateResponseDTO> findAllRates() {
+        List<CurrencyRate> currencies = currencyRateRepository.findAll();
+
+        return currencies.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Convertir entidad CurrencyRate a DTO
+     */
+    private CurrencyRateResponseDTO convertToDTO(CurrencyRate rate) {
+        return CurrencyRateResponseDTO.builder()
+                .code(rate.getCode())
+                .value(rate.getValue())
+                .updatedAt(rate.getUpdatedAt())
+                .build();
     }
 
     /**

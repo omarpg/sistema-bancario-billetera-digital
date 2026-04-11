@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useAuthStore } from '@/store/authStore';
 import { securityService } from '@/lib/security';
+import { useDashboardStore } from '@/store/dashboardStore';
 import type { SecuritySettings } from '@/types';
 import Input from '@/components/ui/Input';
 import { formatDateTime, formatRut } from '@/lib/utils';
@@ -22,12 +23,13 @@ export default function ProfilePage() {
   });
   const [passwordErrors, setPasswordErrors] = useState<{ [key: string]: string }>({});
   const [changingPassword, setChangingPassword] = useState(false);
-  //const [passwordSuccess, setPasswordSuccess] = useState(false);
 
   // Estado para 2FA
   const [twoFactorPassword, setTwoFactorPassword] = useState('');
   const [twoFactorError, setTwoFactorError] = useState('');
   const [toggling2FA, setToggling2FA] = useState(false);
+
+  const { loadUnreadNotifications } = useDashboardStore();
 
   useEffect(() => {
     loadSettings();
@@ -72,18 +74,16 @@ export default function ProfilePage() {
     return Object.keys(errors).length === 0;
   };
 
-  const handleChangePassword = async (e: React.FormEvent) => {
+  const handleChangePassword = async (e: React.ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (!validatePasswordForm()) return;
 
     setChangingPassword(true);
     setPasswordErrors({});
-    //setPasswordSuccess(false);
 
     try {
       await securityService.changePassword(passwordForm);
-      //setPasswordSuccess(true);
       toast.success('Contraseña cambiada exitosamente', {
         duration: 5000,
       });
@@ -93,7 +93,7 @@ export default function ProfilePage() {
         confirmPassword: '',
       });
 
-      //setTimeout(() => setPasswordSuccess(false), 5000);
+      await loadUnreadNotifications();
     } catch (error: unknown) {
       const axiosError = error as AxiosError<{ message: string }>;
       const message = axiosError.response?.data?.message || 'Error al cambiar contraseña';
@@ -129,6 +129,7 @@ export default function ProfilePage() {
       // Recargar settings
       await loadSettings();
       setTwoFactorPassword('');
+      await loadUnreadNotifications();
     } catch (error: unknown) {
       const axiosError = error as AxiosError<{ message: string }>;
       const message = axiosError.response?.data?.message || 'Error al actualizar 2FA';
@@ -137,18 +138,6 @@ export default function ProfilePage() {
       setToggling2FA(false);
     }
   };
-  /*
-  if (loading) {
-    return (
-      <div className="p-6">
-        <h1 className="text-3xl font-bold text-gray-900">Perfil y Seguridad</h1>
-        <p className="text-gray-600 mt-1">Gestiona tu información y configuración de seguridad</p>
-        <div className="flex items-center justify-center h-64">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
-        </div>
-      </div>
-    );
-  }*/
 
   return (
     <div className="p-6">
@@ -205,12 +194,6 @@ export default function ProfilePage() {
           {/* Cambio de contraseña */}
           <div className="card">
             <h2 className="text-xl font-semibold text-gray-900 mb-4">Cambiar Contraseña</h2>
-
-            {/*passwordSuccess && (
-              <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-4">
-                <p className="text-green-700">✓ Contraseña cambiada exitosamente</p>
-              </div>
-            )*/}
 
             <form onSubmit={handleChangePassword} className="space-y-4">
               <Input

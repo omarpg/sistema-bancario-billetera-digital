@@ -15,18 +15,28 @@ import java.util.Map;
 @AllArgsConstructor
 public class DashboardSummaryDTO {
 
-    // Saldo total consolidado
-    private BigDecimal totalBalanceCLP;
-    private BigDecimal totalBalanceUF;
+    // Cuentas del usuario
+    private List<AccountResponseDTO> accounts;
 
+    // Contactos
+    private List<ContactResponseDTO> contacts;
+    
     // Últimas transacciones
     private List<TransactionResponseDTO> recentTransactions;
-
-    // Gastos del mes agrupados por tipo (para gráfico)
+    
+    // Notificaciones recientes (últimas 5)
+    private List<NotificationResponseDTO> recentNotifications;
+    
+    // Estadísticas
+    private BigDecimal totalBalanceCLP;
+    private BigDecimal totalBalanceUF;
     private Map<String, BigDecimal> monthlyExpensesByType;
-
-    // Estadísticas adicionales
+    
+    // Contadores
     private Integer accountsCount;
     private Integer contactsCount;
     private Long unreadNotifications;
+    
+    // Indicadores económicos
+    private List<CurrencyRateResponseDTO> currencyRates;
 }

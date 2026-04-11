@@ -61,16 +61,16 @@ backend/
 ### Relaciones
 ```
 Users (1) ──── (N) Accounts
-Users (1) ──── (N) Contacts
 Users (1) ──── (N) OtpCodes
 Users (1) ──── (N) Notifications
 Users (1) ──── (N) AuditLogs
-Accounts (1) ── (N) Transactions (source)
-Accounts (1) ── (N) Transactions (destination)
-Transactions (1) ── (N) Notifications
+Accounts (1) ──── (N) Contacts
+Accounts (1) ──── (N) Transactions (source)
+Accounts (1) ──── (N) Transactions (destination)
+Transactions (1) ──── (N) Notifications
 ```
 
-Ver diagrama completo en: [`/docs/architecture/database-schema.md`](../docs/architecture/database-schema.md)
+Ver diagrama completo en: [`/screenshots/ss_dbmodel.jpg`](../screenshots/ss_dbmodel.jpg)
 
 ---
 
@@ -163,7 +163,7 @@ Ver diagrama completo en: [`/docs/architecture/database-schema.md`](../docs/arch
 | GET    | `/api/transactions`             | Listar transacciones   |
 | GET    | `/api/transactions/{id}`        | Detalle de transacción |
 
-### Indicadores Económicos (crear pública)
+### Indicadores Económicos
 
 | Método | Endpoint              | Descripción             |
 | ------ | --------------------- | ----------------------- |
@@ -283,6 +283,7 @@ docker-compose up --build
 
 - [README Principal](../README.md)
 - [Arquitectura del Backend](./src/main/java/com/billetera/backend/ARCHITECTURE.md)
+- [Diagrama modelo de datos](../screenshots/ss_dbmodel.jpg)
 - [Documentación Spring Boot](https://spring.io/projects/spring-boot)
 
 ---

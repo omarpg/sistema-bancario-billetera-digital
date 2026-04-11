@@ -14,7 +14,7 @@ export const authService = {
 
   async logout() {
     // Por ahora solo limpiamos el estado local
-    // En el futuro podrías llamar a un endpoint de logout
+    // En el futuro podríamos llamar a un endpoint de logout
     localStorage.removeItem('token');
     localStorage.removeItem('user');
   }

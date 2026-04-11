@@ -1,11 +1,10 @@
 package com.billetera.backend.service;
 
-import com.billetera.backend.dto.response.DashboardSummaryDTO;
-import com.billetera.backend.dto.response.TransactionResponseDTO;
-import com.billetera.backend.entity.Account;
-import com.billetera.backend.entity.CurrencyRate;
-import com.billetera.backend.entity.Transaction;
+import com.billetera.backend.dto.response.*;
+import com.billetera.backend.entity.*;
 import com.billetera.backend.entity.enums.AccountStatus;
+import com.billetera.backend.entity.enums.AccountType;
+import com.billetera.backend.entity.enums.NotificationType;
 import com.billetera.backend.entity.enums.TransactionStatus;
 import com.billetera.backend.repository.*;
 import com.billetera.backend.util.TransactionMapper;
@@ -36,18 +35,38 @@ public class DashboardService {
     public DashboardSummaryDTO getSummary(UUID userId) {
         // Obtener todas las cuentas activas
         List<Account> accounts = accountRepository.findByUserIdAndStatus(userId, AccountStatus.ACTIVE);
+        List<UUID> accountIds = accounts.stream().map(Account::getId).toList();
+        List<AccountResponseDTO> accountDTOs = accounts.stream()
+                .map(this::toAccountDTO).toList();
+
+        // Obtener contactos
+        List<Contact> contacts = contactRepository.findByOwnerId(userId);
+        List<ContactResponseDTO> contactDTOs = contacts.stream()
+                .map(this::toContactDTO).toList();
 
         // Calcular saldo total consolidado
         BigDecimal totalBalanceCLP = calculateTotalBalanceInCLP(accounts);
         BigDecimal totalBalanceUF = calculateTotalBalanceInUF(accounts);
 
         // Obtener últimas 5 transacciones completadas
-        List<Transaction> recentTransactions = getRecentTransactions(userId);
+        List<Transaction> recentTransactions = getRecentTransactions(accountIds);
         List<TransactionResponseDTO> recentTransactionDTOs = recentTransactions.stream()
             .map(transactionMapper::toDTO).collect(Collectors.toList());
 
+        // Obtener últimas 5 notificaciones
+        List<Notification> notifications = notificationRepository
+                .findTop5ByUserIdOrderByCreatedAtDesc(userId);
+        List<NotificationResponseDTO> notificationDTOs = notifications.stream()
+                .map(this::toNotificationDTO)
+                .collect(Collectors.toList());
+
         // Calcular gastos del mes agrupados por tipo
         Map<String, BigDecimal> monthlyExpenses = calculateMonthlyExpensesByType(userId);
+
+        // Obtener indicadores económicos
+        List<CurrencyRate> rates = currencyRateRepository.findAll();
+        List<CurrencyRateResponseDTO> currencyRateDTOs = rates.stream()
+                .map(this::toCurrencyRateDTO).collect(Collectors.toList());
 
         // Contar estadísticas
         int accountsCount = accounts.size();
@@ -55,13 +74,17 @@ public class DashboardService {
         long unreadNotifications = notificationRepository.countByUserIdAndIsReadFalse(userId);
 
         return DashboardSummaryDTO.builder()
+                .accounts(accountDTOs)
+                .contacts(contactDTOs)
+                .recentTransactions(recentTransactionDTOs)
+                .recentNotifications(notificationDTOs)
                 .totalBalanceCLP(totalBalanceCLP)
                 .totalBalanceUF(totalBalanceUF)
-                .recentTransactions(recentTransactionDTOs)
                 .monthlyExpensesByType(monthlyExpenses)
                 .accountsCount(accountsCount)
                 .contactsCount(contactsCount)
                 .unreadNotifications(unreadNotifications)
+                .currencyRates(currencyRateDTOs)
                 .build();
     }
 
@@ -121,9 +144,8 @@ public class DashboardService {
     /**
      * Obtener últimas 5 transacciones del usuario
      */
-    private List<Transaction> getRecentTransactions(UUID userId) {
-        List<Transaction> allTransactions = transactionRepository
-                .findByUserIdAndStatus(userId, TransactionStatus.COMPLETED);
+     private List<Transaction> getRecentTransactions(List<UUID> accountIds) {
+        List<Transaction> allTransactions = transactionRepository.findByAccountIds(accountIds);
 
         return allTransactions.stream()
                 .limit(5)
@@ -159,5 +181,58 @@ public class DashboardService {
         }
 
         return expensesByType;
+    }
+
+    /**
+     * Métodos auxiliares para convertir entidades a DTOs
+     */
+
+    private AccountResponseDTO toAccountDTO(Account account) {
+        return AccountResponseDTO.builder()
+                .id(account.getId())
+                .accountNumber(account.getAccountNumber())
+                .type(AccountType.valueOf(account.getType().name()))
+                .balance(account.getBalance())
+                .currency(account.getCurrency())
+                .status(AccountStatus.valueOf(account.getStatus().name()))
+                .createdAt(account.getCreatedAt())
+                .build();
+    }
+
+    private ContactResponseDTO toContactDTO(Contact contact) {
+        return ContactResponseDTO.builder()
+                .id(contact.getId())
+                .fullName(contact.getFullName())
+                .rut(contact.getRut())
+                .bankName(contact.getBankName())
+                .accountNumber(contact.getAccountNumber())
+                .accountType(contact.getAccountType())
+                .email(contact.getEmail())
+                .createdAt(contact.getCreatedAt())
+                .build();
+    }
+
+    private NotificationResponseDTO toNotificationDTO(Notification notification) {
+        return NotificationResponseDTO.builder()
+                .id(notification.getId())
+                .type(NotificationType.valueOf(notification.getType().name()))
+                .title(notification.getTitle())
+                .message(notification.getMessage())
+                .isRead(notification.getIsRead())
+                .relatedTransactionId(
+                    notification.getRelatedTransaction() != null 
+                        ? notification.getRelatedTransaction().getId() 
+                        : null
+                )
+                .createdAt(notification.getCreatedAt())
+                .build();
+    }
+
+    private CurrencyRateResponseDTO toCurrencyRateDTO(CurrencyRate rate) {
+        return CurrencyRateResponseDTO.builder()
+                .code(rate.getCode())
+                .value(rate.getValue())
+                .updatedAt(rate.getUpdatedAt())
+                .build();
     }
 }

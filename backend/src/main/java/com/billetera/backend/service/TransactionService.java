@@ -3,7 +3,6 @@ package com.billetera.backend.service;
 import com.billetera.backend.dto.response.TransactionResponseDTO;
 import com.billetera.backend.entity.Account;
 import com.billetera.backend.entity.Transaction;
-//import com.billetera.backend.entity.enums.TransactionStatus;
 import com.billetera.backend.exception.ResourceNotFoundException;
 import com.billetera.backend.repository.AccountRepository;
 import com.billetera.backend.repository.TransactionRepository;

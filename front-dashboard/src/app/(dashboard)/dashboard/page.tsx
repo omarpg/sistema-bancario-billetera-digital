@@ -1,46 +1,32 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useAuthStore } from '@/store/authStore';
 import { useDashboardStore } from '@/store/dashboardStore';
-import { transactionsService } from '@/lib/transactions';
-import type { Transaction } from '@/types';
+//import { transactionsService } from '@/lib/transactions';
+//import type { Transaction } from '@/types';
 import { formatCurrency, formatDateTime } from '@/lib/utils';
 import Link from 'next/link';
 
 export default function DashboardPage() {
   const user = useAuthStore((state) => state.user);
 
-  // Obtener datos del store (ya cargados en el layout)
-  const accounts = useDashboardStore((state) => state.accounts);
-  const accountsLoaded = useDashboardStore((state) => state.accountsLoaded);
-  const unreadCount = useDashboardStore((state) => state.unreadNotifications);
-
-  // Solo las transacciones se cargan aquí (lazy loading)
-  const [transactions, setTransactions] = useState<Transaction[]>([]);
-  const [loading, setLoading] = useState(true);
+  // ✅ Un solo hook que trae TODO
+  const {
+    accounts,
+    recentTransactions,
+    unreadNotifications,
+    totalBalanceCLP,
+    isLoading,
+    isLoaded,
+    loadDashboard,
+  } = useDashboardStore();
 
   useEffect(() => {
-    if (accountsLoaded) {
-      loadDashboardData();
-    }
-  }, [accountsLoaded]);
+    loadDashboard();
+  }, [loadDashboard]);
 
-  const loadDashboardData = async () => {
-    try {
-      setLoading(true);
-      const transactionsData = await transactionsService.getAll();
-      setTransactions(transactionsData.slice(0, 5)); // Últimas 5
-    } catch (error) {
-      console.error('Error cargando datos del dashboard:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const totalBalance = accounts.reduce((sum, acc) => sum + acc.balance, 0);
-
-  const thisMonthTransfers = transactions.filter((tx) => {
+  const thisMonthTransfers = recentTransactions.filter((tx) => {
     const txDate = new Date(tx.createdAt);
     const now = new Date();
     return (
@@ -63,8 +49,8 @@ export default function DashboardPage() {
     }
   };
 
-  // Mientras esperamos que el store se cargue
-  if (!accountsLoaded || loading) {
+  // Loading state
+  if (isLoading || !isLoaded) {
     return (
       <div className="p-6">
         <div className="mb-8">
@@ -104,7 +90,7 @@ export default function DashboardPage() {
               </svg>
             </div>
           </div>
-          <p className="text-3xl font-bold text-gray-900">{formatCurrency(totalBalance)}</p>
+          <p className="text-3xl font-bold text-gray-900">{formatCurrency(totalBalanceCLP)}</p>
           <p className="text-sm text-gray-500 mt-1">
             {accounts.length} cuenta{accounts.length !== 1 ? 's' : ''} activa{accounts.length !== 1 ? 's' : ''}
           </p>
@@ -144,14 +130,14 @@ export default function DashboardPage() {
               <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
               </svg>
-              {unreadCount > 0 && (
+              {unreadNotifications > 0 && (
                 <div className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center">
-                  <span className="text-white text-xs font-bold">{unreadCount}</span>
+                  <span className="text-white text-xs font-bold">{unreadNotifications}</span>
                 </div>
               )}
             </div>
           </div>
-          <p className="text-3xl font-bold text-gray-900">{unreadCount}</p>
+          <p className="text-3xl font-bold text-gray-900">{unreadNotifications}</p>
           <p className="text-sm text-gray-500 mt-1">Sin leer</p>
           <Link
             href="/dashboard/notifications"
@@ -210,11 +196,11 @@ export default function DashboardPage() {
                 Ver todas
               </Link>
             </div>
-            {transactions.length === 0 ? (
+            {recentTransactions.length === 0 ? (
               <p className="text-gray-500 text-center py-8">No hay transacciones recientes</p>
             ) : (
               <div className="space-y-3">
-                {transactions.map((tx) => (
+                {recentTransactions.map((tx) => (
                   <div key={tx.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                     <div className="flex items-center space-x-3">
                       <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">

@@ -1,8 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { accountsService } from '@/lib/accounts';
-import { contactsService } from '@/lib/contacts';
 import { transfersService } from '@/lib/transfers';
 import { useDashboardStore } from '@/store/dashboardStore';
 import type { TransferReceiptData } from '@/types';
@@ -23,15 +21,14 @@ export default function TransfersPage() {
   const {
     accounts,
     contacts,
-    accountsLoaded,
-    contactsLoaded,
-    setAccounts,
-    setContacts,
-    invalidateAccounts,
-    invalidateTransactions
+    loadContacts,
+    loadAccounts,
+    refreshDashboard,
+    reset,
+    isLoaded,
+    isLoading
   } = useDashboardStore();
   const [currentStep, setCurrentStep] = useState(1);
-  const [loading, setLoading] = useState(!accountsLoaded || !contactsLoaded);
   const [submitting, setSubmitting] = useState(false);
 
   // Form data
@@ -55,49 +52,12 @@ export default function TransfersPage() {
 
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
-  // Cargar cuentas y contactos
-  const loadData = async () => {
-    try {
-      setLoading(true);
-      /*
-      const [accountsData, contactsData] = await Promise.all([
-        accountsService.getAll(),
-        contactsService.getAll(),
-      ]);
-
-      setAccounts(accountsData);
-      setContacts(contactsData);
-
-      // Seleccionar primera cuenta solo si no hay una ya seleccionada
-      if (accountsData.length > 0 && !sourceAccountId) {
-        setSourceAccountId(accountsData[0].id);
-      }*/
-      const promises = [];
-
-      // Solo cargar si no están en caché
-      if (!accountsLoaded) {
-        promises.push(accountsService.getAll().then(setAccounts));
-      }
-      if (!contactsLoaded) {
-        promises.push(contactsService.getAll().then(setContacts));
-      }
-
-      await Promise.all(promises);
-    } catch (error) {
-      console.error('Error cargando datos:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
-    if (!accountsLoaded || !contactsLoaded) {
-      loadData();
-    } else {
-      setLoading(false);
+    if (!isLoaded) {
+      loadAccounts();
+      loadContacts();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [isLoaded, loadAccounts, loadContacts]);
 
   // Paso 1: Validar y pasar a confirmación
   const handleStep1 = () => {
@@ -215,20 +175,15 @@ export default function TransfersPage() {
         duration: 5000,
       });
 
-      // Invalidar cachés relacionados
-      invalidateAccounts(); // Saldos cambiaron
-      invalidateTransactions(); // Hay nueva transacción
-
-      // Recargar cuentas para actualizar saldos
-      await loadData();
+      // Recargar dashboard para actualizar datos críticos
+      reset(); // Resetear estado del dashboard
+      await refreshDashboard();
 
       // Resetear formulario
       resetForm();
 
-      // Mostrar comprobante después de un breve delay
-      setTimeout(() => {
-        setShowReceipt(true);
-      }, 500);
+      // Mostrar comprobante
+      setShowReceipt(true);
     } catch (error: unknown) {
       const axiosError = error as AxiosError<{ message: string }>;
       const message = axiosError.response?.data?.message ||
@@ -274,7 +229,7 @@ export default function TransfersPage() {
         <h1 className="text-3xl font-bold text-gray-900">Transferencias</h1>
         <p className="text-gray-600 mt-1">Realiza transferencias de forma segura</p>
       </div>
-      {loading ? (
+      {isLoading ? (
         <div className="flex items-center justify-center h-64">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
         </div>

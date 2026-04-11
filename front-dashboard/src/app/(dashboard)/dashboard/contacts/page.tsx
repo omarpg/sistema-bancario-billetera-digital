@@ -13,13 +13,11 @@ import type { AxiosError } from 'axios';
 export default function ContactsPage() {
   const {
     contacts,
-    contactsLoaded,
-    setContacts,
-    invalidateContacts
+    loadContacts,
+    isLoaded,
+    isLoading,
+    error
   } = useDashboardStore();
-  //const [contacts, setContacts] = useState<Contact[]>([]);
-  const [loading, setLoading] = useState(!contactsLoaded);
-  const [error, setError] = useState('');
 
   // Modal states
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -28,41 +26,19 @@ export default function ContactsPage() {
   // Delete confirmation
   const [deletingContact, setDeletingContact] = useState<Contact | null>(null);
 
-  // Cargar contactos
-  const loadContacts = async () => {
-    try {
-      setLoading(true);
-      const data = await contactsService.getAll();
-      setContacts(data);
-      setError('');
-    } catch (err: unknown) {
-      const axiosError = err as AxiosError<{ message: string }>;
-      setError(axiosError.response?.data?.message || 'Error al cargar contactos');
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
-    // Si ya están cargados en el store, usarlos
-    if (contactsLoaded) {
-      setLoading(false);
-      return;
+    // Solo carga contactos si no están cargados previamente
+    if (!isLoaded && contacts.length === 0) {
+      loadContacts();
     }
-
-    // Si no, cargarlos
-    loadContacts();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [contactsLoaded]);
+  }, [isLoaded, contacts.length, loadContacts]);
 
   // Crear contacto
   const handleCreate = async (data: ContactFormData) => {
     try {
       await contactsService.create(data);
-      invalidateContacts();
       await loadContacts();
       setIsModalOpen(false);
-
       toast.success('Contacto creado exitosamente');
     } catch (error: unknown) {
       const axiosError = error as AxiosError<{ message: string }>;
@@ -77,11 +53,9 @@ export default function ContactsPage() {
 
     try {
       await contactsService.update(editingContact.id, data);
-      invalidateContacts();
       await loadContacts();
       setIsModalOpen(false);
       setEditingContact(undefined);
-
       toast.success('Contacto actualizado exitosamente');
     } catch (error: unknown) {
       const axiosError = error as AxiosError<{ message: string }>;
@@ -94,7 +68,6 @@ export default function ContactsPage() {
   const handleDelete = async (contact: Contact) => {
     try {
       await contactsService.delete(contact.id);
-      invalidateContacts();
       await loadContacts();
       setDeletingContact(null);
       toast.success('Contacto eliminado exitosamente');
@@ -117,8 +90,6 @@ export default function ContactsPage() {
     setIsModalOpen(true);
   };
 
-
-
   return (
     <div className="p-6">
       {/* Header */}
@@ -130,7 +101,7 @@ export default function ContactsPage() {
         <button
           onClick={openCreateModal}
           className="btn-primary cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-          disabled={loading}
+          disabled={isLoading}
         >
           <svg
             className="w-5 h-5 inline-block mr-2"
@@ -157,7 +128,7 @@ export default function ContactsPage() {
       )}
 
       {/* Lista de contactos */}
-      {loading ? (
+      {isLoading ? (
         <div className="flex items-center justify-center h-64">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
         </div>

@@ -23,8 +23,7 @@ public class DashboardController {
      */
     @GetMapping("/summary")
     public ResponseEntity<DashboardSummaryDTO> getSummary(
-            @RequestHeader("Authorization") String authHeader
-    ) {
+            @RequestHeader("Authorization") String authHeader) {
         String token = authHeader.substring(7);
         UUID userId = jwtUtil.extractUserId(token);
 
